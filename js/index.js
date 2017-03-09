@@ -184,7 +184,7 @@ function pixel(graph, options) {
 
   var labelsToShow = [];
 
-  var controls;
+  var TrackballController;
 
 
   init();
@@ -262,7 +262,11 @@ function pixel(graph, options) {
     //        toScreenPosition(getNode(node.id).position), node.label
     //    );
     // });
-    controls.update();
+
+    // 트랙볼컨트롤 업데이트.
+    TrackballController.update();
+
+    
     renderer.render(scene, camera);
   }
 
@@ -385,7 +389,7 @@ function pixel(graph, options) {
 
 
     // 트랙볼 컨트롤러 추가, (추가하게되면 원래 있던 wasd 컨트롤러는 무시됨) 2017.03.09
-    controls = new TrackballControls( camera, container);
+    TrackballController = new TrackballControls( camera, container);
 
 
     // 구 생성 테스트.
