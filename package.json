@@ -1,0 +1,18 @@
+{
+  "name": "community_vis",
+  "version": "1.0.0",
+  "description": "korean community data visualization ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "visualization",
+    "network"
+  ],
+  "author": "Heungseok Park",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.1"
+  }
+}

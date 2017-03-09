@@ -1,0 +1,156 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <!-- java script file to draw 3d-network -->
+    <script src="//threejs.org/build/three.js"></script>
+
+    <!-- For drawing high-chart -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <!-- Additional files for the Highslide popup effect -->
+
+
+    <style>
+        body{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+
+        }
+
+        #container, #container2 {
+            font: 12px Arial;
+            color: white;
+            position: absolute;
+        }
+
+        #container2{
+            background-color: rgba(192, 192, 192, 0.2);
+        }
+
+
+
+        /* css for d3 */
+        path {
+            stroke: steelblue;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .axis path,
+        .axis line{
+            fill: none;
+            stroke: grey;
+            stroke-width: 1;
+            shape-rendering: crispEdges;
+        }
+        text{
+            fill: white
+        }
+
+        .legend {
+            font-size: 14px;
+            font-weight: bold;
+            text-anchor: middle;
+        }
+
+        .page_title{
+            color: white;
+            position: absolute;
+            margin-left: 30px;
+            font-size: 27px;
+        }
+        .sub_page_title{
+            color: darkgray;
+            font-size: 20px;
+        }
+
+        #images {
+            width: 200px;
+            height: 400px;
+        }
+
+        .candidates {
+
+            margin-bottom: 20px;
+            filter: grayscale(100%);
+            transition: .3s ease-in-out;
+
+        }
+
+        .candidates:hover {
+            margin-bottom: 15px;
+            transform: scale(1.2);
+            filter: grayscale(0);
+
+        }
+
+        .keys {
+            position: absolute;
+            transform: scale(0.5);
+            bottom: 0;
+            right: 0;
+            opacity: 0.7;
+
+        }
+
+        #container2 {
+            position: absolute;;
+            bottom: 5%;
+            left: 0;
+            margin-left: 10px;
+            transform: scale(0.8);
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+<div id="container" style="width:100%; height:100%;">
+
+    <h1 class="page_title" style="left: 30px; top: 20px; position: absolute">CommScope
+        <div class="sub_page_title">
+            An Interactive visualization for analyzing emerging issues of KOC (Korean Online Communities)
+        </div>
+    </h1>
+    <div id="images" style="left: 40px; top: 200px; position: absolute;">
+
+        <!--<img src="./img/Ahn_cheol.png" width="90" height="110"  style="left: 40px; top: 400px; position: absolute">
+        <img src="./img/Moon.png" width="90" height="110" style="left: 40px; top: 550px; position: absolute">
+        <img src="./img/Yoo.png" width="90" height="110" style="left: 40px; top: 700px; position: absolute">-->
+        <img class="candidates" src="./img/Ahn_cheol.png" name="AhnCheolSoo" width="90" height="110">
+        <img class="candidates" src="./img/Moon.png" name="MoonJaeIn" width="90" height="110">
+        <img class="candidates" src="./img/Yoo.png" name="YooSeongMin" width="90" height="110">
+        <img class="candidates" src="./img/JaeMyung.PNG" name="LeeJaeMyung" width="90" height="110">
+        <img class="candidates" src="./img/KyoAhn.png" name="HwangKyoAhn" width="90" height="110">
+        <!--<img class="candidates" src="./img/SangJung.png" name="ShimSangJung" width="90" height="110">-->
+        <img class="candidates" src="./img/HeeJung.png" name="AhnHeeJung" width="90" height="110">
+
+    </div>
+
+    <script src="./js/bundle.js"></script>
+
+</div>
+
+
+<div id="container2"></div>
+<script>
+
+</script>
+
+<div id="keyboards">
+    <img class="keys" src="./img/WASDQE_keyboard.png">
+</div>
+
+</body>
+</html>
