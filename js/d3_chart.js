@@ -5,18 +5,21 @@
 module.exports = createD3chart;
 
 var d3 = require('d3');
+var graph = require('./graph_construction.js')
 
 function createD3chart(container_name) {
 
     var svg;
 
     // Set the dimensions of the canvas / graph
-    var margin = {top: 20, right: 20, bottom: 70, left: 50},
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
         width = 600 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
-    var chart_title = "The Frequency of keyword by each online community ";
-    var chart_status = "- overall";
+    // var chart_title = "The Frequency of keyword by each online community ";
+    // var chart_status = "- overall";
+    var chart_title = "온라인 커뮤니티별 대선 후보 언급량";
+    var chart_status = "";
 
     // var parseDate = d3.timeParse("%b %Y"); // valid for yyyy-mm-dd format
     var parseDate = d3.timeParse("%Y-%m-%d %H:%M"); // valid for yyyy-mm-dd hh:mm format
@@ -36,7 +39,7 @@ function createD3chart(container_name) {
         window.onload = function () {
             var d = document.getElementById(container_name);
             d.style.width = 600 + 'px';
-            d.style.height = 300 + 'px';
+            d.style.height = 400 + 'px';
             // d.style.position = "absolute";
             // d.style.left = 10 + 'px';
             // d.style.top = 800 + 'px';
@@ -53,17 +56,19 @@ function createD3chart(container_name) {
         svg = d3.select('#' + container_name)
             .append("svg")
                .attr("width", width + margin.left + margin.right)
-               .attr("height", height + margin.top + margin.bottom)
+               .attr("height", height + margin.top + margin.bottom + 100)
             .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                // .attr("transform", "translate(" + margin.left + "," + margin.top+ ")");
+            .attr("transform", "translate(" + margin.left + "," + 100+ ")");
 
         // Add title of the chart
         svg.append("text")
             .attr("x", (width/2))
-            .attr("y", 20 - (margin.top / 2) )
+            // .attr("y", (margin.top / 2) - 20 )
+            .attr("y", -70)
             .attr("text-anchor", "middle")
             .attr("class", "chart-title")
-            .style("font-size", "16px")
+            .style("font-size", "20px")
             .text(chart_title + chart_status);
             // .text("커뮤니티별 키워드 언급량 ");
 
@@ -122,22 +127,28 @@ function createD3chart(container_name) {
                 // add the Legend
                 svg.append("text")
                     .attr("x", (legendSpace/2) + i*legendSpace) // space legend
-                    .attr("y", height + (margin.bottom/2) + 5)
-                    .attr("class", "legend") // style the legend
+                    .attr("y",-30)
+                    // .attr("y", height + (margin.bottom/2) + 5)
+                    .attr("class", "lineChart_legend") // style the legend
                     .style("fill", function () {
                         return d.color = color(d.key);
                     })
-                    .on("click", function () {
-                        // Determine if current line is visible
-                        var active = d.active ? false : true,
-                            newOpacity = active ? 0 : 1;
-                        // Hide or show the elements based on the ID
-                        d3.select('#tag' + d.key.replace(/\s+/g, ''))
-                            .transition().duration(1000)
-                            .style("opacity", newOpacity);
-                        // Update whether or not the elements are active
-                        d.active = active;
+                    .style("font-size", "20px")
+                    .on("click", function(){
+                        graph.two_steps_network(d.key);
                     })
+
+                    // .on("click", function () {
+                    //     // Determine if current line is visible
+                    //     var active = d.active ? false : true,
+                    //         newOpacity = active ? 0 : 1;
+                    //     // Hide or show the elements based on the ID
+                    //     d3.select('#tag' + d.key.replace(/\s+/g, ''))
+                    //         .transition().duration(1000)
+                    //         .style("opacity", newOpacity);
+                    //     // Update whether or not the elements are active
+                    //     d.active = active;
+                    // })
                     .text(d.key);
 
             });
@@ -155,13 +166,15 @@ function createD3chart(container_name) {
                 .call(yAxis);
 
         });
+
+
     }
 
 
-    function updateChart(name) {
-        console.log(name);
-
-    }
+    // function updateNetowrk(name) {
+    //     console.log(name);
+    //
+    // }
 
 
     // update data section (called from the onclick on the specific node of networks)

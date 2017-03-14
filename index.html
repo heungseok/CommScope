@@ -72,13 +72,25 @@
             color: darkgray;
             font-size: 20px;
         }
-
-        #images {
-            width: 200px;
-            height: 400px;
+        #current_network{
+            font-size: 20px
         }
 
-        .candidates {
+        #candidates_images {
+            width: 100px;
+            /*height: 400px;*/
+        }
+
+        #communities_images {
+            width: 100px;
+
+        }
+
+        .communities {
+
+        }
+
+        .candidates, .communities{
 
             margin-bottom: 20px;
             filter: grayscale(100%);
@@ -86,12 +98,26 @@
 
         }
 
-        .candidates:hover {
+        .candidates:hover , .communities:hover {
             margin-bottom: 15px;
             transform: scale(1.2);
             filter: grayscale(0);
 
         }
+
+
+        /*.communities {*/
+            /*margin-bottom: 20px;*/
+            /*filter: grayscale(100%);*/
+            /*transition: .3s ease-in-out;*/
+
+        /*}*/
+        .communities:hover {
+            transform: scale(1.2);
+            filter: grayscale(0);
+
+        }
+
 
         .keys {
             position: absolute;
@@ -122,19 +148,33 @@
         <div class="sub_page_title">
             An Interactive visualization for analyzing emerging issues of KOC (Korean Online Communities)
         </div>
-    </h1>
-    <div id="images" style="left: 40px; top: 200px; position: absolute;">
 
-        <!--<img src="./img/Ahn_cheol.png" width="90" height="110"  style="left: 40px; top: 400px; position: absolute">
-        <img src="./img/Moon.png" width="90" height="110" style="left: 40px; top: 550px; position: absolute">
-        <img src="./img/Yoo.png" width="90" height="110" style="left: 40px; top: 700px; position: absolute">-->
-        <img class="candidates" src="./img/Ahn_cheol.png" name="AhnCheolSoo" width="90" height="110">
-        <img class="candidates" src="./img/Moon.png" name="MoonJaeIn" width="90" height="110">
-        <img class="candidates" src="./img/Yoo.png" name="YooSeongMin" width="90" height="110">
-        <img class="candidates" src="./img/JaeMyung.PNG" name="LeeJaeMyung" width="90" height="110">
-        <img class="candidates" src="./img/KyoAhn.png" name="HwangKyoAhn" width="90" height="110">
-        <!--<img class="candidates" src="./img/SangJung.png" name="ShimSangJung" width="90" height="110">-->
-        <img class="candidates" src="./img/HeeJung.png" name="AhnHeeJung" width="90" height="110">
+        <div id="current_network">
+
+        </div>
+    </h1>
+
+    <!--<div id="candidates_images" style="left: 40px; top: 200px; position: absolute;">-->
+
+    <div id="image_wrapper">
+
+        <div id="candidates_images" style="left: 40px; top: 20%; position: absolute;">
+            <img class="candidates" src="./img/Ahn_cheol.png" name="AhnCheolSoo" width="90" height="110">
+            <img class="candidates" src="./img/Moon.png" name="MoonJaeIn" width="90" height="110">
+            <img class="candidates" src="./img/Yoo.png" name="YooSeongMin" width="90" height="110">
+            <img class="candidates" src="./img/JaeMyung.PNG" name="LeeJaeMyung" width="90" height="110">
+            <img class="candidates" src="./img/KyoAhn.png" name="HwangKyoAhn" width="90" height="110">
+            <!--<img class="candidates" src="./img/SangJung.png" name="ShimSangJung" width="90" height="110">-->
+            <img class="candidates" src="./img/HeeJung.png" name="AhnHeeJung" width="90" height="110">
+        </div>
+
+        <div id="communities_images" style="left: 200px; top: 20%; position: absolute">
+            <img class="communities" src="./img/일베.png" name="일베" width = "110" height="90">
+            <img class="communities" src="./img/디씨2.png" name="디씨" width = "110" height="90">
+            <img class="communities" src="./img/엠팍.png" name="엠팍" width = "110" height="90">
+            <img class="communities" src="./img/오유.png" name="오유" width = "110" height="90">
+        </div>
+
 
     </div>
 
@@ -147,10 +187,12 @@
 <script>
 
 </script>
+<!--
 
 <div id="keyboards">
     <img class="keys" src="./img/WASDQE_keyboard.png">
 </div>
 
+-->
 </body>
 </html>

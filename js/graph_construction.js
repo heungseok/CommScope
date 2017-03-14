@@ -6,6 +6,7 @@
 var $ = require("jquery");
 var nGraph = require('ngraph.graph');
 var http = require('http');
+var d3 = require('d3');
 var elementClass = require('element-class');
 
 var d3_chart = require('./../js/d3_chart.js');
@@ -41,15 +42,24 @@ var degreeThreshold_ToShowLabel = 30;
 
 var currentName= "AhnCheolSoo"; // name of the current network (default as 안철수)
 var targetName = "AhnCheolSoo"; // name of the target network (default as 안철수)
+var pathName = "./data/" + targetName + "_network.json";
+
+var cummunity_map = {
+    "일베": "ilbe",
+    "디씨": "DC",
+    "오유": "OU",
+    "인벤": "inven",
+    "엠팍": "MP"
+};
 
 
 // load graph file remotely using GET method.
-AjaxFileRead();
+AjaxFileRead(pathName);
 
 
-function AjaxFileRead() {
+function AjaxFileRead(pathName) {
+    $("#current_network").html(currentName);
 
-    var pathName = "./data/" + targetName + "_network.json";
 
     http.get({path : pathName, json: true }, function (res) {
         console.log("0. Load graph file start.");
@@ -67,18 +77,69 @@ function AjaxFileRead() {
             console.log("2. Start Initializing graph ");
             graph.beginUpdate();
             parsed['nodes'].forEach(function (node) {
-                graph.addNode(node.id, {
-                    label: node.label,
-                    color: Number(rgb2hex(node.color)),
-                    size: node.size,
-                    activated: false
-                });
+
+                if(node.color){
+                    graph.addNode(node.id, {
+                        label: node.label,
+                        color: Number(rgb2hex(node.color)),
+                        size: node.size,
+                        activated: false
+                    });
+                }else{
+                    graph.addNode(node.id, {
+                        label: node.label,
+                        color: Number(rgb2hex("rgb(194,245,91)")),
+                        size: 10,
+                        activated: false
+                    });
+                }
+
+                /*
+                try{
+                    graph.addNode(node.id, {
+                        label: node.label,
+                        color: Number(rgb2hex(node.color)),
+                        size: node.size,
+                        activated: false
+                    });
+
+                }catch (err) {
+                    graph.addNode(node.id, {
+                        label: node.label,
+                        color: "#8B008B",
+                        size: 10,
+                        activated: false
+                    });
+                }
+                */
             });
             parsed['edges'].forEach(function (edge) {
-                graph.addLink(edge.source, edge.target, {
-                    color: rgb2hex(edge.color),
-                    activated: false
-                });
+
+                if(edge.color){
+                    graph.addLink(edge.source, edge.target, {
+                        color: rgb2hex(edge.color),
+                        activated: false
+                    });
+                }else{
+                    graph.addLink(edge.source, edge.target, {
+                        color: rgb2hex("rgb(158,158,198)"),
+                        activated: false
+                    });
+                }
+                /*
+                try{
+                    graph.addLink(edge.source, edge.target, {
+                        color: rgb2hex(edge.color),
+                        activated: false
+                    });
+                } catch (err) {
+                    graph.addLink(edge.source, edge.target, {
+                        color: "#222222",
+                        activated: false
+                    });
+                }
+                */
+
             });
             graph.endUpdate();
 
@@ -96,8 +157,18 @@ function AjaxFileRead() {
              */
             console.log("4. stop the layout after loading the data");
             window.setTimeout(function () {
+
+                // fit the network with the screen automatically
+                renderer.autoFit();
+                // set the layout stable
                 renderer.stable(true);
+
             }, 5000);
+
+
+
+
+
 
         });
     });
@@ -107,10 +178,39 @@ function AjaxFileRead() {
 
 
 // d3 차트생성
-var d3_ui = d3_chart('container2');
-d3_ui.init();
+// var d3_ui = d3_chart('container2');
+// d3_ui.init();
 
 
+// chart안의 계열 클릭 이벤트.
+// d3 차트 라벨 클릭시 커뮤니티 네트웤으로 변경
+var two_steps_network = function(category_name) {
+
+    // query_name == '불러올 파일 명'
+    var query = currentName + "_network_" + cummunity_map[category_name];
+    // currentName = currentName + "(" + category_name + ")";
+    // console.log(query);
+
+    graph.clear();
+    renderer.clearHtmlLabels();
+    // set renderer as unstable to enable 3d force-atlas Layout
+    renderer.stable(false);
+
+    pathName = "./data/" + query +".json";
+    AjaxFileRead(pathName);
+
+    $("#current_network").html(currentName + "(" + category_name + ")");
+    renderer.autoFit();
+
+
+}
+
+module.exports.two_steps_network = two_steps_network;
+
+
+// d3_ui.init();
+// var test = d3.selectAll('text.lineChart_legend');
+// console.log(test);
 
 // 후보자 클릭 이벤트.
 $(".candidates").click(function () {
@@ -126,8 +226,10 @@ $(".candidates").click(function () {
        renderer.stable(false);
 
        // load other network
-       AjaxFileRead();
        currentName = targetName;
+       pathName = "./data/" + currentName + "_network.json";
+       AjaxFileRead(pathName);
+
 
    }else {
        console.log("current network is same with the target")
@@ -135,7 +237,8 @@ $(".candidates").click(function () {
 
 });
 
-// 커뮤니티 클릭 이벤트.
+
+
 
 ///
 function renderNode(node) {

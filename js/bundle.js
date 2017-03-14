@@ -7203,18 +7203,21 @@ function extend() {
 module.exports = createD3chart;
 
 var d3 = require('d3');
+var graph = require('./graph_construction.js')
 
 function createD3chart(container_name) {
 
     var svg;
 
     // Set the dimensions of the canvas / graph
-    var margin = {top: 20, right: 20, bottom: 70, left: 50},
+    var margin = {top: 20, right: 20, bottom: 30, left: 50},
         width = 600 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
-    var chart_title = "The Frequency of keyword by each online community ";
-    var chart_status = "- overall";
+    // var chart_title = "The Frequency of keyword by each online community ";
+    // var chart_status = "- overall";
+    var chart_title = "온라인 커뮤니티별 대선 후보 언급량";
+    var chart_status = "";
 
     // var parseDate = d3.timeParse("%b %Y"); // valid for yyyy-mm-dd format
     var parseDate = d3.timeParse("%Y-%m-%d %H:%M"); // valid for yyyy-mm-dd hh:mm format
@@ -7234,7 +7237,7 @@ function createD3chart(container_name) {
         window.onload = function () {
             var d = document.getElementById(container_name);
             d.style.width = 600 + 'px';
-            d.style.height = 300 + 'px';
+            d.style.height = 400 + 'px';
             // d.style.position = "absolute";
             // d.style.left = 10 + 'px';
             // d.style.top = 800 + 'px';
@@ -7251,17 +7254,19 @@ function createD3chart(container_name) {
         svg = d3.select('#' + container_name)
             .append("svg")
                .attr("width", width + margin.left + margin.right)
-               .attr("height", height + margin.top + margin.bottom)
+               .attr("height", height + margin.top + margin.bottom + 100)
             .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                // .attr("transform", "translate(" + margin.left + "," + margin.top+ ")");
+            .attr("transform", "translate(" + margin.left + "," + 100+ ")");
 
         // Add title of the chart
         svg.append("text")
             .attr("x", (width/2))
-            .attr("y", 20 - (margin.top / 2) )
+            // .attr("y", (margin.top / 2) - 20 )
+            .attr("y", -70)
             .attr("text-anchor", "middle")
             .attr("class", "chart-title")
-            .style("font-size", "16px")
+            .style("font-size", "20px")
             .text(chart_title + chart_status);
             // .text("커뮤니티별 키워드 언급량 ");
 
@@ -7320,22 +7325,28 @@ function createD3chart(container_name) {
                 // add the Legend
                 svg.append("text")
                     .attr("x", (legendSpace/2) + i*legendSpace) // space legend
-                    .attr("y", height + (margin.bottom/2) + 5)
-                    .attr("class", "legend") // style the legend
+                    .attr("y",-30)
+                    // .attr("y", height + (margin.bottom/2) + 5)
+                    .attr("class", "lineChart_legend") // style the legend
                     .style("fill", function () {
                         return d.color = color(d.key);
                     })
-                    .on("click", function () {
-                        // Determine if current line is visible
-                        var active = d.active ? false : true,
-                            newOpacity = active ? 0 : 1;
-                        // Hide or show the elements based on the ID
-                        d3.select('#tag' + d.key.replace(/\s+/g, ''))
-                            .transition().duration(1000)
-                            .style("opacity", newOpacity);
-                        // Update whether or not the elements are active
-                        d.active = active;
+                    .style("font-size", "20px")
+                    .on("click", function(){
+                        graph.two_steps_network(d.key);
                     })
+
+                    // .on("click", function () {
+                    //     // Determine if current line is visible
+                    //     var active = d.active ? false : true,
+                    //         newOpacity = active ? 0 : 1;
+                    //     // Hide or show the elements based on the ID
+                    //     d3.select('#tag' + d.key.replace(/\s+/g, ''))
+                    //         .transition().duration(1000)
+                    //         .style("opacity", newOpacity);
+                    //     // Update whether or not the elements are active
+                    //     d.active = active;
+                    // })
                     .text(d.key);
 
             });
@@ -7353,13 +7364,15 @@ function createD3chart(container_name) {
                 .call(yAxis);
 
         });
+
+
     }
 
 
-    function updateChart(name) {
-        console.log(name);
-
-    }
+    // function updateNetowrk(name) {
+    //     console.log(name);
+    //
+    // }
 
 
     // update data section (called from the onclick on the specific node of networks)
@@ -7420,7 +7433,7 @@ function createD3chart(container_name) {
 
 
 }
-},{"d3":55}],36:[function(require,module,exports){
+},{"./graph_construction.js":36,"d3":55}],36:[function(require,module,exports){
 /**
  * Created by heungseok2 on 2017-02-07.
  */
@@ -7429,6 +7442,7 @@ function createD3chart(container_name) {
 var $ = require("jquery");
 var nGraph = require('ngraph.graph');
 var http = require('http');
+var d3 = require('d3');
 var elementClass = require('element-class');
 
 var d3_chart = require('./../js/d3_chart.js');
@@ -7464,15 +7478,24 @@ var degreeThreshold_ToShowLabel = 30;
 
 var currentName= "AhnCheolSoo"; // name of the current network (default as 안철수)
 var targetName = "AhnCheolSoo"; // name of the target network (default as 안철수)
+var pathName = "./data/" + targetName + "_network.json";
+
+var cummunity_map = {
+    "일베": "ilbe",
+    "디씨": "DC",
+    "오유": "OU",
+    "인벤": "inven",
+    "엠팍": "MP"
+};
 
 
 // load graph file remotely using GET method.
-AjaxFileRead();
+AjaxFileRead(pathName);
 
 
-function AjaxFileRead() {
+function AjaxFileRead(pathName) {
+    $("#current_network").html(currentName);
 
-    var pathName = "./data/" + targetName + "_network.json";
 
     http.get({path : pathName, json: true }, function (res) {
         console.log("0. Load graph file start.");
@@ -7490,18 +7513,69 @@ function AjaxFileRead() {
             console.log("2. Start Initializing graph ");
             graph.beginUpdate();
             parsed['nodes'].forEach(function (node) {
-                graph.addNode(node.id, {
-                    label: node.label,
-                    color: Number(rgb2hex(node.color)),
-                    size: node.size,
-                    activated: false
-                });
+
+                if(node.color){
+                    graph.addNode(node.id, {
+                        label: node.label,
+                        color: Number(rgb2hex(node.color)),
+                        size: node.size,
+                        activated: false
+                    });
+                }else{
+                    graph.addNode(node.id, {
+                        label: node.label,
+                        color: Number(rgb2hex("rgb(194,245,91)")),
+                        size: 10,
+                        activated: false
+                    });
+                }
+
+                /*
+                try{
+                    graph.addNode(node.id, {
+                        label: node.label,
+                        color: Number(rgb2hex(node.color)),
+                        size: node.size,
+                        activated: false
+                    });
+
+                }catch (err) {
+                    graph.addNode(node.id, {
+                        label: node.label,
+                        color: "#8B008B",
+                        size: 10,
+                        activated: false
+                    });
+                }
+                */
             });
             parsed['edges'].forEach(function (edge) {
-                graph.addLink(edge.source, edge.target, {
-                    color: rgb2hex(edge.color),
-                    activated: false
-                });
+
+                if(edge.color){
+                    graph.addLink(edge.source, edge.target, {
+                        color: rgb2hex(edge.color),
+                        activated: false
+                    });
+                }else{
+                    graph.addLink(edge.source, edge.target, {
+                        color: rgb2hex("rgb(158,158,198)"),
+                        activated: false
+                    });
+                }
+                /*
+                try{
+                    graph.addLink(edge.source, edge.target, {
+                        color: rgb2hex(edge.color),
+                        activated: false
+                    });
+                } catch (err) {
+                    graph.addLink(edge.source, edge.target, {
+                        color: "#222222",
+                        activated: false
+                    });
+                }
+                */
+
             });
             graph.endUpdate();
 
@@ -7519,8 +7593,18 @@ function AjaxFileRead() {
              */
             console.log("4. stop the layout after loading the data");
             window.setTimeout(function () {
+
+                // fit the network with the screen automatically
+                renderer.autoFit();
+                // set the layout stable
                 renderer.stable(true);
+
             }, 5000);
+
+
+
+
+
 
         });
     });
@@ -7530,10 +7614,39 @@ function AjaxFileRead() {
 
 
 // d3 차트생성
-var d3_ui = d3_chart('container2');
-d3_ui.init();
+// var d3_ui = d3_chart('container2');
+// d3_ui.init();
 
 
+// chart안의 계열 클릭 이벤트.
+// d3 차트 라벨 클릭시 커뮤니티 네트웤으로 변경
+var two_steps_network = function(category_name) {
+
+    // query_name == '불러올 파일 명'
+    var query = currentName + "_network_" + cummunity_map[category_name];
+    // currentName = currentName + "(" + category_name + ")";
+    // console.log(query);
+
+    graph.clear();
+    renderer.clearHtmlLabels();
+    // set renderer as unstable to enable 3d force-atlas Layout
+    renderer.stable(false);
+
+    pathName = "./data/" + query +".json";
+    AjaxFileRead(pathName);
+
+    $("#current_network").html(currentName + "(" + category_name + ")");
+    renderer.autoFit();
+
+
+}
+
+module.exports.two_steps_network = two_steps_network;
+
+
+// d3_ui.init();
+// var test = d3.selectAll('text.lineChart_legend');
+// console.log(test);
 
 // 후보자 클릭 이벤트.
 $(".candidates").click(function () {
@@ -7549,8 +7662,10 @@ $(".candidates").click(function () {
        renderer.stable(false);
 
        // load other network
-       AjaxFileRead();
        currentName = targetName;
+       pathName = "./data/" + currentName + "_network.json";
+       AjaxFileRead(pathName);
+
 
    }else {
        console.log("current network is same with the target")
@@ -7558,7 +7673,8 @@ $(".candidates").click(function () {
 
 });
 
-// 커뮤니티 클릭 이벤트.
+
+
 
 ///
 function renderNode(node) {
@@ -7663,7 +7779,7 @@ function filedRead() {
     graph.endUpdate();
 }
 
-},{"../nodeSettings.js":51,"./../js/d3_chart.js":35,"./../js/index.js":37,"config.pixel":53,"element-class":56,"http":25,"jquery":80,"ngraph.graph":91}],37:[function(require,module,exports){
+},{"../nodeSettings.js":51,"./../js/d3_chart.js":35,"./../js/index.js":37,"config.pixel":53,"d3":55,"element-class":56,"http":25,"jquery":80,"ngraph.graph":91}],37:[function(require,module,exports){
 var THREE = require('three');
 var TrackballControls = require('three-trackballcontrols');
 
@@ -7932,7 +8048,7 @@ function pixel(graph, options) {
     // 트랙볼컨트롤 업데이트.
     TrackballController.update();
 
-    
+
     renderer.render(scene, camera);
   }
 
@@ -8390,11 +8506,16 @@ function edgeView(scene) {
 
       fromColor(edge);
       toColor(edge);
+
+
+      // 여기에 edgeMesh를 각각 추가하면 어떨지.. (for giving each edge weight(thickness))
     }
 
     geometry = new THREE.BufferGeometry();
     var material = new THREE.LineBasicMaterial({
-      vertexColors: THREE.VertexColors
+      vertexColors: THREE.VertexColors,
+        // line width: Due to limitations in the ANGLE layer, with the WebGL renderer on Windows platform linewidth will always be 1 regardless of the set value
+        linewidth: 1
     });
 
     geometry.addAttribute('position', new THREE.BufferAttribute(points, 3));
@@ -8794,8 +8915,10 @@ function createInput(camera, graph, domElement) {
   hitTest.on('nodedblclick', passthrough('nodedblclick'));
 
   controls.on('move', inputChanged);
-  domElement.addEventListener('keydown', globalKeyHandler, false);
-  domElement.addEventListener('mousemove', globalMouseMove, false);
+
+  // lock the duplicated keyboard & mouse input(now is the trackball controller- see the graph_construction.js)
+  // domElement.addEventListener('keydown', globalKeyHandler, false);
+  // domElement.addEventListener('mousemove', globalMouseMove, false);
 
   return api;
 
