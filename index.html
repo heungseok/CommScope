@@ -73,7 +73,22 @@
             font-size: 20px;
         }
         #current_network{
-            font-size: 20px
+            font-size: 20px;
+            color: #cecece;
+            background: #363636;
+            border-radius: 16px;
+            margin: 0 4px 1em 0;
+            padding-left: 20px;
+            padding-right: 40px;
+            height: 27px;
+            display: inline-block;
+            /*text-align: center;*/
+            /*background: url('/img/cancel.svg') no-repeat center center;*/
+            background-image: url('./img/cancel.svg');
+            background-repeat: no-repeat;
+            background-position: right;
+            background-position-x: 92%
+
         }
 
         #candidates_images {
@@ -86,8 +101,16 @@
 
         }
 
-        .communities {
+        .network_btn {
+            margin-bottom: 20px;
+            filter: grayscale(100%);
+            transition: .3s ease-in-out;
+        }
 
+        .network_btn:hover {
+            margin-bottom: 15px;
+            transform: scale(1.2);
+            filter: grayscale(0);
         }
 
         .candidates, .communities{
@@ -98,25 +121,13 @@
 
         }
 
-        .candidates:hover , .communities:hover {
+        .candidates:hover, .communities:hover {
             margin-bottom: 15px;
             transform: scale(1.2);
             filter: grayscale(0);
 
         }
 
-
-        /*.communities {*/
-            /*margin-bottom: 20px;*/
-            /*filter: grayscale(100%);*/
-            /*transition: .3s ease-in-out;*/
-
-        /*}*/
-        .communities:hover {
-            transform: scale(1.2);
-            filter: grayscale(0);
-
-        }
 
 
         .keys {
@@ -126,14 +137,6 @@
             right: 0;
             opacity: 0.7;
 
-        }
-
-        #container2 {
-            position: absolute;;
-            bottom: 5%;
-            left: 0;
-            margin-left: 10px;
-            transform: scale(0.8);
         }
 
 
@@ -149,30 +152,33 @@
             An Interactive visualization for analyzing emerging issues of KOC (Korean Online Communities)
         </div>
 
-        <div id="current_network">
-
-        </div>
     </h1>
 
     <!--<div id="candidates_images" style="left: 40px; top: 200px; position: absolute;">-->
 
     <div id="image_wrapper">
 
+        <div id="current_network" style="left: 40px; top: 15%; position:absolute; ">
+
+        </div>
+
         <div id="candidates_images" style="left: 40px; top: 20%; position: absolute;">
-            <img class="candidates" src="./img/Ahn_cheol.png" name="AhnCheolSoo" width="90" height="110">
-            <img class="candidates" src="./img/Moon.png" name="MoonJaeIn" width="90" height="110">
-            <img class="candidates" src="./img/Yoo.png" name="YooSeongMin" width="90" height="110">
-            <img class="candidates" src="./img/JaeMyung.PNG" name="LeeJaeMyung" width="90" height="110">
-            <img class="candidates" src="./img/KyoAhn.png" name="HwangKyoAhn" width="90" height="110">
+            <button class="network_btn" type="candidate" name="Global_candidates" width="90" height="110">Global Candidates</button>
+            <img class="network_btn" type="candidate" src="./img/Ahn_cheol.png" name="AhnCheolSoo" width="90" height="110">
+            <img class="network_btn" type="candidate" src="./img/Moon.png" name="MoonJaeIn" width="90" height="110">
+            <img class="network_btn" type="candidate" src="./img/Yoo.png" name="YooSeongMin" width="90" height="110">
+            <img class="network_btn" type="candidate" src="./img/JaeMyung.PNG" name="LeeJaeMyung" width="90" height="110">
+            <img class="network_btn" type="candidate" src="./img/KyoAhn.png" name="HwangKyoAhn" width="90" height="110">
             <!--<img class="candidates" src="./img/SangJung.png" name="ShimSangJung" width="90" height="110">-->
-            <img class="candidates" src="./img/HeeJung.png" name="AhnHeeJung" width="90" height="110">
+            <img class="network_btn" type="candidate" src="./img/HeeJung.png" name="AhnHeeJung" width="90" height="110">
         </div>
 
         <div id="communities_images" style="left: 200px; top: 20%; position: absolute">
-            <img class="communities" src="./img/일베.png" name="일베" width = "110" height="90">
-            <img class="communities" src="./img/디씨2.png" name="디씨" width = "110" height="90">
-            <img class="communities" src="./img/엠팍.png" name="엠팍" width = "110" height="90">
-            <img class="communities" src="./img/오유.png" name="오유" width = "110" height="90">
+            <button class="network_btn" type="community" name="Global_communities" width="90" height="110">Global Communities</button>
+            <img class="network_btn" type="community" src="./img/일베.png" name="ilbe" width = "110" height="90">
+            <img class="network_btn" type="community" src="./img/디씨2.png" name="DC" width = "110" height="90">
+            <img class="network_btn" type="community" src="./img/엠팍.png" name="MP" width = "110" height="90">
+            <img class="network_btn" type="community" src="./img/오유.png" name="OU" width = "110" height="90">
         </div>
 
 
@@ -182,11 +188,6 @@
 
 </div>
 
-
-<div id="container2"></div>
-<script>
-
-</script>
 <!--
 
 <div id="keyboards">

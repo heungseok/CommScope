@@ -42,14 +42,17 @@ var degreeThreshold_ToShowLabel = 30;
 
 var currentName= "AhnCheolSoo"; // name of the current network (default as 안철수)
 var targetName = "AhnCheolSoo"; // name of the target network (default as 안철수)
-var pathName = "./data/" + targetName + "_network.json";
+var pathName = targetName + "_network.json";
+var currentType = "candidate";
+var targetType = "candidate";
+var combination_network;
 
-var cummunity_map = {
+var community_map = {
     "일베": "ilbe",
-    "디씨": "DC",
-    "오유": "OU",
+    "디씨": "dc",
+    "오유": "ou",
     "인벤": "inven",
-    "엠팍": "MP"
+    "엠팍": "mp"
 };
 
 
@@ -61,7 +64,7 @@ function AjaxFileRead(pathName) {
     $("#current_network").html(currentName);
 
 
-    http.get({path : pathName, json: true }, function (res) {
+    http.get({path : "./data/" + pathName, json: true }, function (res) {
         console.log("0. Load graph file start.");
 
         var body = '';
@@ -166,6 +169,15 @@ function AjaxFileRead(pathName) {
             }, 5000);
 
 
+            // set the button activated
+            var temp = pathName.split("_")[0];
+            if(temp.includes("+")){
+                temp = temp.split("+");
+                $('img[name='+temp[0]+']').css('filter', 'grayscale(0)')
+                $('img[name='+temp[1]+']').css('filter', 'grayscale(0)')
+            }else{
+                $('img[name='+temp+']').css('filter', 'grayscale(0)')
+            }
 
 
 
@@ -181,7 +193,7 @@ function AjaxFileRead(pathName) {
 // var d3_ui = d3_chart('container2');
 // d3_ui.init();
 
-
+/*
 // chart안의 계열 클릭 이벤트.
 // d3 차트 라벨 클릭시 커뮤니티 네트웤으로 변경
 var two_steps_network = function(category_name) {
@@ -206,36 +218,91 @@ var two_steps_network = function(category_name) {
 }
 
 module.exports.two_steps_network = two_steps_network;
-
+*/
 
 // d3_ui.init();
 // var test = d3.selectAll('text.lineChart_legend');
 // console.log(test);
 
 // 후보자 클릭 이벤트.
-$(".candidates").click(function () {
-   targetName = $(this).attr("name");
-
-   if(targetName != currentName){
-       console.log("Switch Network! {current network: "+ currentName +
-                    ", target network: " + targetName);
-
-       graph.clear();
-       renderer.clearHtmlLabels();
-       // set renderer as unstable to enable 3d force-atlas Layout
-       renderer.stable(false);
-
-       // load other network
-       currentName = targetName;
-       pathName = "./data/" + currentName + "_network.json";
-       AjaxFileRead(pathName);
+$(".network_btn").click(function () {
 
 
-   }else {
-       console.log("current network is same with the target")
-   }
+    // 클릭한 버튼의 타입(후보자, 커뮤니티)
+    targetType = $(this).attr("type");
+    // target name parsing, 만약 community일 경우 한글을 영어로 전환
+    targetName = $(this).attr("name");
+
+
+    // 현재 타입과 다를 경우 조합 네트워크 호출
+    if(currentType != targetType){
+        twosteps_network(currentName, targetName);
+
+
+    // 현재 타입과 동일할 경우
+    }else {
+        if(targetName != currentName){
+
+            console.log("Switch Network! {current network: "+ currentName +
+                ", target network: " + targetName);
+
+            if(combination_network){
+                var temp = combination_network.split("+");
+                $('img[name=' + temp[0] + ']').css('filter', 'grayscale(100%)')
+                $('img[name=' + temp[1] + ']').css('filter', 'grayscale(100%)')
+            }
+
+            $('img[name='+currentName+']').css('filter', 'grayscale(100%)')
+
+            graph.clear();
+            renderer.clearHtmlLabels();
+            // set renderer as unstable to enable 3d force-atlas Layout
+            renderer.stable(false);
+
+            // load other network
+            currentName = targetName;
+            pathName = currentName + "_network.json";
+            AjaxFileRead(pathName);
+
+
+        }else {
+            console.log("current network is same with the target")
+        }
+
+    }
+
 
 });
+
+function twosteps_network(current, target){
+
+    var target_combi;
+    // 파일명은 항상 후보+커뮤니티_network (!= 커뮤니티+후보_network)
+    if(currentType == "candidate")  target_combi = current + "+" + target;
+    else    target_combi = target + "+" + current;
+
+    if(target_combi == combination_network) return;
+
+    // 이전 combination에 해당하는 버튼 activated 해제
+    if(combination_network) {
+        var temp = combination_network.split("+");
+        $('img[name=' + temp[0] + ']').css('filter', 'grayscale(100%)')
+        $('img[name=' + temp[1] + ']').css('filter', 'grayscale(100%)')
+    }
+
+
+    combination_network = target_combi;
+    console.log("Combination Network! current+target network: " + current + " + " + target);
+
+    graph.clear();
+    renderer.clearHtmlLabels();
+    // set renderer as unstable to enable 3d force-atlas Layout
+    renderer.stable(false);
+
+    pathName = combination_network + "_network.json";
+    AjaxFileRead(pathName);
+
+}
 
 
 
