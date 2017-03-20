@@ -254,6 +254,8 @@ function pixel(graph, options) {
         labelPositions.push(toScreenPosition(getNode(node.id).position));
     });
 
+
+    // 쓰레숄드 이상인 노드 visible
     tooltipView.showLabels(labelPositions);
 
     // labelsToShow.forEach(function (node) {
@@ -389,7 +391,7 @@ function pixel(graph, options) {
 
 
     // 트랙볼 컨트롤러 추가, (추가하게되면 원래 있던 wasd 컨트롤러는 무시됨) 2017.03.09
-    TrackballController = new TrackballControls( camera, container);
+    TrackballController = new TrackballControls(camera, container);
 
 
     // 구 생성 테스트.
@@ -551,9 +553,17 @@ function pixel(graph, options) {
       if (selectedNode !== undefined){
           console.log("recover previous color from activated color");
           originLinks.forEach(function (link) {
-              var tempLink = getLink(link.id);
-              tempLink.fromColor = link.data.color;
-              tempLink.toColor = 0x000000;
+              if(link.data.color){
+                  var tempLink = getLink(link.id);
+                  tempLink.fromColor = link.data.color;
+                  tempLink.toColor = 0x000000;
+
+              }else{
+                  var tempLink = getLink(link.id);
+                  tempLink.fromColor = link.data.fromColor;
+                  tempLink.toColor = link.data.toColor;
+              }
+
           });
           originLinks = [];
       }

@@ -2,50 +2,43 @@
  * Created by heungseok2 on 2017-02-07.
  */
 
-
+// *********** import library ***********
 var $ = require("jquery");
 var nGraph = require('ngraph.graph');
 var http = require('http');
 var d3 = require('d3');
 var elementClass = require('element-class');
-
 var d3_chart = require('./../js/d3_chart.js');
-
 // load renderer
 var graphRenderer = require('./../js/index.js');
-
 // load node UI
 var createSettingsView = require('config.pixel');
 var addCurrentNodeSettings = require('../nodeSettings.js');
 
-// create Graph var
-var graph = nGraph();
-// create graph Renderer var
-var renderer = graphRenderer(graph,{
-    container: document.getElementById("container"),
-    link: renderLink,
-    node: renderNode
-});
 
+// *********** declare global var ***********
+// create Graph, renderer var
+var graph, renderer;
 
 // variable for var chart
 var chartDom;
 
 // gui view, renderer setting
-var settingsView = createSettingsView(renderer);
-var gui = settingsView.gui();
-var nodeSettings = addCurrentNodeSettings(gui, renderer);
-var physicsSettings = {gravity: -5}; // construct physics simulator settings
+var settingsView, gui, nodeSettings, physicsSettings;
+var gui_open;
 
-var degreeThreshold_ToShowLabel = 30;
+var degreeThreshold_ToShowLabel;
 
-
-var currentName= "AhnCheolSoo"; // name of the current network (default as 안철수)
-var targetName = "AhnCheolSoo"; // name of the target network (default as 안철수)
-var pathName = targetName + "_network.json";
-var currentType = "candidate";
-var targetType = "candidate";
+var currentName, targetName, pathName;
+var targetType, rootType;
 var combination_network;
+
+
+// var pathName = "test.json";
+
+// declare empty color map
+var color_map = {};
+
 
 var community_map = {
     "일베": "ilbe",
@@ -56,12 +49,71 @@ var community_map = {
 };
 
 
-// load graph file remotely using GET method.
-AjaxFileRead(pathName);
+// init network
+function initNetwork(){
+
+    currentName = "global_candidate";
+    targetName = "global_candidate";
+    pathName = targetName + "_network.json";
+    targetType = "candidate";
+    rootType = "candidate";
+
+    $("#current_network").html("Global network - root as candidate");
+    // 반대 type의 버튼 클릭 금지.
+    $('img.network_btn[type="community"]').css('pointer-events', 'none');
+
+    // create Graph var
+    graph = nGraph();
+    // create graph Renderer var
+    renderer = graphRenderer(graph,{
+        container: document.getElementById("container"),
+        link: renderLink,
+        node: renderNode,
+        physics:{
+            gravity : -20,
+            timeStep : 8
+
+        }
+
+    });
+
+    settingsView = createSettingsView(renderer);
+    gui = settingsView.gui();
+    gui_open = false;
+    if(gui_open) gui.open();
+    else gui.close();
+
+    nodeSettings = addCurrentNodeSettings(gui, renderer);
+    physicsSettings = {gravity: -5}; // construct physics simulator settings
+
+    degreeThreshold_ToShowLabel = 30;
+
+
+
+    // graph 네트워크 생성
+    // load graph file remotely using GET method.
+    AjaxFileRead(pathName);
+
+    // 모든 이미지 활성화(as global network is on)
+    $('.network_btn').css('filter', 'grayscale(0)');
+
+    // init network eventHandler
+    initEventHandler();
+
+
+    // d3 차트생성
+    // var d3_ui = d3_chart('container2');
+    // d3_ui.init();
+
+}
+
+initNetwork();
+
+
 
 
 function AjaxFileRead(pathName) {
-    $("#current_network").html(currentName);
+    var degreeSum = 0;
 
 
     http.get({path : "./data/" + pathName, json: true }, function (res) {
@@ -77,44 +129,32 @@ function AjaxFileRead(pathName) {
             console.log("1. Load the graph file completed.");
             // console.log(parsed);
 
+            // init color map
+            initRandomColorMap(parsed['mode_num']);
+
             console.log("2. Start Initializing graph ");
             graph.beginUpdate();
             parsed['nodes'].forEach(function (node) {
+                degreeSum += Number(node.size);
 
                 if(node.color){
                     graph.addNode(node.id, {
                         label: node.label,
                         color: Number(rgb2hex(node.color)),
-                        size: node.size,
+                        size: Number(node.size),
                         activated: false
                     });
-                }else{
+                }else if(node.attributes["Modularity Class"]){
+                    var module = node.attributes["Modularity Class"];
+
                     graph.addNode(node.id, {
                         label: node.label,
-                        color: Number(rgb2hex("rgb(194,245,91)")),
-                        size: 10,
+                        color: color_map[module],
+                        size: Number(node.size),
                         activated: false
                     });
                 }
 
-                /*
-                try{
-                    graph.addNode(node.id, {
-                        label: node.label,
-                        color: Number(rgb2hex(node.color)),
-                        size: node.size,
-                        activated: false
-                    });
-
-                }catch (err) {
-                    graph.addNode(node.id, {
-                        label: node.label,
-                        color: "#8B008B",
-                        size: 10,
-                        activated: false
-                    });
-                }
-                */
             });
             parsed['edges'].forEach(function (edge) {
 
@@ -125,39 +165,21 @@ function AjaxFileRead(pathName) {
                     });
                 }else{
                     graph.addLink(edge.source, edge.target, {
-                        color: rgb2hex("rgb(158,158,198)"),
+                        fromColor: color_map[edge.source_color],
+                        toColor: color_map[edge.target_color],
+                        // color: rgb2hex("rgb(158,158,198)"),
                         activated: false
                     });
                 }
-                /*
-                try{
-                    graph.addLink(edge.source, edge.target, {
-                        color: rgb2hex(edge.color),
-                        activated: false
-                    });
-                } catch (err) {
-                    graph.addLink(edge.source, edge.target, {
-                        color: "#222222",
-                        activated: false
-                    });
-                }
-                */
 
             });
             graph.endUpdate();
 
-            renderer.initLabels(degree = degreeThreshold_ToShowLabel);
+            // set the threshold to show label as mean degree
+            console.log(degreeSum);
+            renderer.initLabels(degree = degreeSum/parsed['nodes'].length);
             console.log("3. Finished graph construct");
 
-            /*
-             // pass it as second argument to layout:
-             var layout = require('ngraph.forcelayout3d')(graph, physicsSettings);
-             for (var i =0; i < 500; ++i) {
-             layout.step();
-             console.log(i);
-             }
-             // layout.dispose();
-             */
             console.log("4. stop the layout after loading the data");
             window.setTimeout(function () {
 
@@ -169,16 +191,6 @@ function AjaxFileRead(pathName) {
             }, 5000);
 
 
-            // set the button activated
-            var temp = pathName.split("_")[0];
-            if(temp.includes("+")){
-                temp = temp.split("+");
-                $('img[name='+temp[0]+']').css('filter', 'grayscale(0)')
-                $('img[name='+temp[1]+']').css('filter', 'grayscale(0)')
-            }else{
-                $('img[name='+temp+']').css('filter', 'grayscale(0)')
-            }
-
 
 
 
@@ -189,85 +201,181 @@ function AjaxFileRead(pathName) {
 }
 
 
-// d3 차트생성
-// var d3_ui = d3_chart('container2');
-// d3_ui.init();
+function initRandomColorMap(color_length) {
 
-/*
-// chart안의 계열 클릭 이벤트.
-// d3 차트 라벨 클릭시 커뮤니티 네트웤으로 변경
-var two_steps_network = function(category_name) {
+    for(var i=0; i<color_length; i++){
+        // modularity id: i; color: "0x111111";
+        var random_color = '0x'+Math.random().toString(16).substr(2,6);
+        color_map[''+i] = random_color;
 
-    // query_name == '불러올 파일 명'
-    var query = currentName + "_network_" + cummunity_map[category_name];
-    // currentName = currentName + "(" + category_name + ")";
-    // console.log(query);
-
-    graph.clear();
-    renderer.clearHtmlLabels();
-    // set renderer as unstable to enable 3d force-atlas Layout
-    renderer.stable(false);
-
-    pathName = "./data/" + query +".json";
-    AjaxFileRead(pathName);
-
-    $("#current_network").html(currentName + "(" + category_name + ")");
-    renderer.autoFit();
-
-
+    }
 }
 
-module.exports.two_steps_network = two_steps_network;
-*/
 
+
+
+// d3 바차트 생성.
 // d3_ui.init();
 // var test = d3.selectAll('text.lineChart_legend');
 // console.log(test);
 
-// 후보자 클릭 이벤트.
+// ROOT(global) 버튼 클릭 이벤트.
+$(".root_network").click(function () {
+
+    var targetRoot = $(this).attr("type");
+
+    // 현재 root와 targetRoot와 다를 경우, Root switching
+    if(rootType != targetRoot){
+
+        $('.' + rootType + '_container').css({
+            'border-style': 'solid',
+            'border-color': 'black',
+            'transition': '.8s ease-in-out'
+        });
+
+        $('.' + targetRoot + '_container').css({
+            'border-style': 'solid',
+            'border-color': 'grey',
+            'transition': '.8s ease-in-out'
+        });
+
+        console.log( "switch the root from " + rootType + " to " + targetRoot);
+
+        // set path name as new global network
+        pathName = "global_" + targetRoot +"_network.json";
+        // set targetRoot as rootType
+        rootType = targetRoot;
+
+    // 현재 root와 targetRoot가 같을 경우, Root reload
+    }else{
+        console.log("Root is same as: " + rootType + ", and clean the current network(후보, 후보+커뮤니티) and switch network as rootType");
+
+        // set path name as new global network(rootType network reload)
+        pathName = "global_" + rootType +"_network.json";
+
+    }
+
+    // 반대 type의 버튼 클릭 금지 및 현재 type 버튼 클릭 활성화
+    if(rootType=="candidate"){
+        $('img.network_btn[type="community"]').css('pointer-events', 'none');
+        $('img.network_btn[type="candidate"]').css('pointer-events', 'auto');
+
+    }else{
+        $('img.network_btn[type="candidate"]').css('pointer-events', 'none');
+        $('img.network_btn[type="community"]').css('pointer-events', 'auto');
+    }
+
+    // set the other buttons and current rootType inactive, and clear current name and combination
+    $('.network_btn').css('filter', 'grayscale(0)');
+    $('.network_btn:hover').css('filter', 'grayscale(0)');
+
+
+    // combination, currentName 초기화
+    currentName = "";
+    combination_network = "";
+
+    graphClear();
+    $("#current_network").html("Global network - root as " + rootType);
+    AjaxFileRead(pathName);
+
+
+});
+
+
+// 후보자, 커뮤니티 버튼 클릭 이벤트.
 $(".network_btn").click(function () {
 
+    // 모든 버튼 활성화
+    $('img.network_btn').css('pointer-events', 'auto');
 
     // 클릭한 버튼의 타입(후보자, 커뮤니티)
     targetType = $(this).attr("type");
-    // target name parsing, 만약 community일 경우 한글을 영어로 전환
+    // 클릭한 버튼의 name
     targetName = $(this).attr("name");
 
 
-    // 현재 타입과 다를 경우 조합 네트워크 호출
-    if(currentType != targetType){
+    // 현재 타입과 다를 경우 조합 네트워크 호출(ex 후보자->커뮤니티, 커뮤니티->후보자)
+    if(rootType != targetType){
         twosteps_network(currentName, targetName);
 
+    // 현재 타입과 동일할 경우(ex 후보자->후보자, 커뮤니티->커뮤니티)
+    }else if(currentName){
 
-    // 현재 타입과 동일할 경우
-    }else {
         if(targetName != currentName){
 
             console.log("Switch Network! {current network: "+ currentName +
                 ", target network: " + targetName);
 
-            if(combination_network){
-                var temp = combination_network.split("+");
-                $('img[name=' + temp[0] + ']').css('filter', 'grayscale(100%)')
-                $('img[name=' + temp[1] + ']').css('filter', 'grayscale(100%)')
-            }
+            // 후보자->후보자 혹은 후보자+커뮤니티->후부자 인경우 커뮤니티 버튼 색 활성화, and vice versa
+            if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(0)');
+            else                            $('img.network_btn[type="candidate"]').css('filter', 'grayscale(0)');
 
-            $('img[name='+currentName+']').css('filter', 'grayscale(100%)')
 
-            graph.clear();
-            renderer.clearHtmlLabels();
-            // set renderer as unstable to enable 3d force-atlas Layout
-            renderer.stable(false);
+            // target을 제외한 이미지 inactive
+            $('img.network_btn[type='+rootType+']').css('filter', 'grayscale(100%)');
+            // target 에 대한 이미지 active
+            $('img[name='+targetName+']').css('filter', 'grayscale(0)');
+
+
+            graphClear();
 
             // load other network
             currentName = targetName;
             pathName = currentName + "_network.json";
+            $("#current_network").html(currentName);
             AjaxFileRead(pathName);
 
+            // combination 초기화
+            combination_network = "";
 
+        // 후보자==후보자, or 커뮤니티==커뮤니티
         }else {
             console.log("current network is same with the target")
+
+            // 만약 combination이 존재할 경우, 단일 네트워크로 돌아감.
+            if(combination_network){
+                graphClear();
+                // load other network
+                currentName = targetName;
+                pathName = currentName + "_network.json";
+                $("#current_network").html(currentName);
+                AjaxFileRead(pathName);
+
+
+                // 조합 중 현재 타입과 반대되는 타입 이미지 활성화.
+                // 후보자->후보자 혹은 후보자+커뮤니티->후보자 인경우 커뮤니티 버튼 색 활성화, and vice versa
+                if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(0)');
+                else                            $('img.network_btn[type="candidate"]').css('filter', 'grayscale(0)');
+
+                // combination 초기화
+                combination_network = "";
+
+            }
         }
+
+
+    // rootType 클릭으로 current name이 초기화 된 상태에서 클릭되었을 경우.
+    }else{
+
+        currentName = $(this).attr("name");
+
+        // target을 제외한 이미지 inactive
+        $('img.network_btn[type='+rootType+']').css('filter', 'grayscale(100%)');
+        // target 에 대한 이미지 active
+        $('img[name='+currentName+']').css('filter', 'grayscale(0)')
+
+        // 반대 type 이미지 active
+        if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(0)');
+        else                            $('img.network_btn[type="candidate"]').css('filter', 'grayscale(0)');
+
+        graphClear();
+        // load other network
+        pathName = currentName + "_network.json";
+        $("#current_network").html(currentName);
+        AjaxFileRead(pathName);
+
+        // combination 초기화
+        combination_network = "";
 
     }
 
@@ -277,35 +385,53 @@ $(".network_btn").click(function () {
 function twosteps_network(current, target){
 
     var target_combi;
-    // 파일명은 항상 후보+커뮤니티_network (!= 커뮤니티+후보_network)
-    if(currentType == "candidate")  target_combi = current + "+" + target;
+    // 파일명은 항상 후보+커뮤니티_network (커뮤니티+후보_network 형식 아님)
+    if(rootType == "candidate")  target_combi = current + "+" + target;
     else    target_combi = target + "+" + current;
 
     if(target_combi == combination_network) return;
 
-    // 이전 combination에 해당하는 버튼 activated 해제
-    if(combination_network) {
-        var temp = combination_network.split("+");
-        $('img[name=' + temp[0] + ']').css('filter', 'grayscale(100%)')
-        $('img[name=' + temp[1] + ']').css('filter', 'grayscale(100%)')
-    }
+
+    // 반대 타입 이미지 active=> inactive
+    if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(100%)');
+    else                            $('img.network_btn[type="candidate"]').css('filter', 'grayscale(100%)');
+
+    // combination 타겟 활성화
+    $('img[name='+target+']').css('filter', 'grayscale(0)');
 
 
     combination_network = target_combi;
-    console.log("Combination Network! current+target network: " + current + " + " + target);
 
-    graph.clear();
-    renderer.clearHtmlLabels();
-    // set renderer as unstable to enable 3d force-atlas Layout
-    renderer.stable(false);
+    console.log("Combination Network! current+target network: " + current + " + " + target);
+    graphClear();
 
     pathName = combination_network + "_network.json";
+    $("#current_network").html(combination_network);
     AjaxFileRead(pathName);
 
 }
 
 
 
+function graphClear(){
+    // graph clear
+    graph.clear();
+    renderer.clearHtmlLabels();
+    // set renderer as unstable to enable 3d force-atlas Layout
+    renderer.stable(false);
+}
+
+
+// GUI open and close
+$("#gui_control").click(function (data) {
+    if(gui_open){
+        gui.close();
+        gui_open = false;
+    }else{
+        gui.open();
+        gui_open = true;
+    }
+})
 
 ///
 function renderNode(node) {
@@ -327,8 +453,8 @@ function renderLink(link) {
     };
 
     return {
-        fromColor: link.data.color,
-        toColor: 0x000000
+        fromColor: link.data.fromColor,
+        toColor: link.data.toColor
     };
 }
 
@@ -349,15 +475,20 @@ function getNumber(string, defaultValue) {
     return (typeof number === 'number') && !isNaN(number) ? number : (defaultValue || 10);
 }
 
+function initEventHandler() {
 
-renderer.on('nodeclick', showNodeDetails);
-renderer.on('nodedblclick', function(node) {
-    renderer.showNode(node.id, 300);
-    renderer.setSelectedNode(node);
-    // activeNeighbors(node);
-    console.log(node);
-    // console.log('Double clicked on ' + JSON.stringify(node));
-});
+    renderer.on('nodeclick', showNodeDetails);
+    renderer.on('nodedblclick', function(node) {
+        renderer.showNode(node.id, 300);
+        renderer.setSelectedNode(node);
+        // activeNeighbors(node);
+        console.log(node);
+        // console.log('Double clicked on ' + JSON.stringify(node));
+    });
+
+}
+
+
 
 
 
@@ -389,6 +520,37 @@ renderer.on('nodehover', function(node) {
 });
 
 
+
+/*
+ // chart안의 계열 클릭 이벤트.
+ // d3 차트 라벨 클릭시 커뮤니티 네트웤으로 변경
+ var two_steps_network = function(category_name) {
+
+ // query_name == '불러올 파일 명'
+ var query = currentName + "_network_" + cummunity_map[category_name];
+ // currentName = currentName + "(" + category_name + ")";
+ // console.log(query);
+
+ graph.clear();
+ renderer.clearHtmlLabels();
+ // set renderer as unstable to enable 3d force-atlas Layout
+ renderer.stable(false);
+
+ pathName = "./data/" + query +".json";
+ AjaxFileRead(pathName);
+
+ $("#current_network").html(currentName + "(" + category_name + ")");
+ renderer.autoFit();
+
+
+ }
+
+ module.exports.two_steps_network = two_steps_network;
+ */
+
+
+
+
 // graph file load function using local fileSystem synchronously ( not recommend)
 function filedRead() {
     var content = fs.readFileSync('./data/test2.json', 'utf8');
@@ -409,3 +571,133 @@ function filedRead() {
     });
     graph.endUpdate();
 }
+
+
+// 테스트 셋(from gephi)용 파일호출 함수
+// function AjaxFileRead(pathName) {
+//     // $("#current_network").html(currentName);
+//
+//     http.get({path : "./data/" + pathName, json: true }, function (res) {
+//         console.log("0. Load graph file start.");
+//
+//         var body = '';
+//         res.on('data', function (buf) {
+//             body += buf;
+//         });
+//         res.on('end', function () {
+//             // Data reception is don, do whatever with it!
+//             var parsed = JSON.parse(body);
+//             console.log("1. Load the graph file completed.");
+//             // console.log(parsed);
+//
+//             console.log("2. Start Initializing graph ");
+//             graph.beginUpdate();
+//             parsed['nodes'].forEach(function (node) {
+//
+//                 if(node.color){
+//                     graph.addNode(node.id, {
+//                         label: node.label,
+//                         color: Number(rgb2hex(node.color)),
+//                         size: node.size,
+//                         activated: false
+//                     });
+//                 }else{
+//                     graph.addNode(node.id, {
+//                         label: node.label,
+//                         color: Number(rgb2hex("rgb(194,245,91)")),
+//                         size: 10,
+//                         activated: false
+//                     });
+//                 }
+//
+//                 /*
+//                  try{
+//                  graph.addNode(node.id, {
+//                  label: node.label,
+//                  color: Number(rgb2hex(node.color)),
+//                  size: node.size,
+//                  activated: false
+//                  });
+//
+//                  }catch (err) {
+//                  graph.addNode(node.id, {
+//                  label: node.label,
+//                  color: "#8B008B",
+//                  size: 10,
+//                  activated: false
+//                  });
+//                  }
+//                  */
+//             });
+//             parsed['edges'].forEach(function (edge) {
+//
+//                 if(edge.color){
+//                     graph.addLink(edge.source, edge.target, {
+//                         color: rgb2hex(edge.color),
+//                         activated: false
+//                     });
+//                 }else{
+//                     graph.addLink(edge.source, edge.target, {
+//                         color: rgb2hex("rgb(158,158,198)"),
+//                         activated: false
+//                     });
+//                 }
+//                 /*
+//                  try{
+//                  graph.addLink(edge.source, edge.target, {
+//                  color: rgb2hex(edge.color),
+//                  activated: false
+//                  });
+//                  } catch (err) {
+//                  graph.addLink(edge.source, edge.target, {
+//                  color: "#222222",
+//                  activated: false
+//                  });
+//                  }
+//                  */
+//
+//             });
+//             graph.endUpdate();
+//
+//             renderer.initLabels(degree = degreeThreshold_ToShowLabel);
+//             console.log("3. Finished graph construct");
+//
+//             /*
+//              // pass it as second argument to layout:
+//              var layout = require('ngraph.forcelayout3d')(graph, physicsSettings);
+//              for (var i =0; i < 500; ++i) {
+//              layout.step();
+//              console.log(i);
+//              }
+//              // layout.dispose();
+//              */
+//             console.log("4. stop the layout after loading the data");
+//             window.setTimeout(function () {
+//
+//                 // fit the network with the screen automatically
+//                 renderer.autoFit();
+//                 // set the layout stable
+//                 renderer.stable(true);
+//
+//             }, 5000);
+//
+// /*
+//
+//             // set the button activated
+//             var temp = pathName.split("_")[0];
+//             if(temp.includes("+")){
+//                 temp = temp.split("+");
+//                 $('img[name='+temp[0]+']').css('filter', 'grayscale(0)')
+//                 $('img[name='+temp[1]+']').css('filter', 'grayscale(0)')
+//             }else{
+//                 $('img[name='+temp+']').css('filter', 'grayscale(0)')
+//             }
+//
+// */
+//
+//
+//
+//         });
+//     });
+//
+// }

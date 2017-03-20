@@ -1,18 +1,16 @@
 <html lang="en">
 <head>
+    <title>CommScope</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!-- java script file to draw 3d-network -->
     <script src="//threejs.org/build/three.js"></script>
-
-    <!-- For drawing high-chart -->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/data.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-
-    <!-- Additional files for the Highslide popup effect -->
 
 
     <style>
@@ -26,16 +24,12 @@
 
         }
 
-        #container, #container2 {
+        #container {
             font: 12px Arial;
             color: white;
+
             position: absolute;
         }
-
-        #container2{
-            background-color: rgba(192, 192, 192, 0.2);
-        }
-
 
 
         /* css for d3 */
@@ -66,11 +60,11 @@
             color: white;
             position: absolute;
             margin-left: 30px;
-            font-size: 27px;
+            /*font-size: 27px;*/
         }
         .sub_page_title{
             color: darkgray;
-            font-size: 20px;
+            /*font-size: 20px;*/
         }
         #current_network{
             font-size: 20px;
@@ -79,35 +73,39 @@
             border-radius: 16px;
             margin: 0 4px 1em 0;
             padding-left: 20px;
-            padding-right: 40px;
+            padding-right: 20px;
             height: 27px;
             display: inline-block;
-            /*text-align: center;*/
-            /*background: url('/img/cancel.svg') no-repeat center center;*/
+
+            /*
             background-image: url('./img/cancel.svg');
             background-repeat: no-repeat;
             background-position: right;
             background-position-x: 92%
+            */
+        }
 
+        .community_container, .candidate_container{
+            padding: 10px 10px 10px 10px
         }
 
         #candidates_images {
-            width: 100px;
+            width: 120px;
             /*height: 400px;*/
         }
 
         #communities_images {
-            width: 100px;
+            width: 140px;
 
         }
 
-        .network_btn {
+        .network_btn, .root_network {
             margin-bottom: 20px;
             filter: grayscale(100%);
             transition: .3s ease-in-out;
         }
 
-        .network_btn:hover {
+        .network_btn:hover ,.root_network:hover {
             margin-bottom: 15px;
             transform: scale(1.2);
             filter: grayscale(0);
@@ -128,8 +126,6 @@
 
         }
 
-
-
         .keys {
             position: absolute;
             transform: scale(0.5);
@@ -139,46 +135,98 @@
 
         }
 
+        #setting {
+            position:absolute;
+            top: 50px;
+            right: 0%;
+        }
+
+        .close-button{
+            visibility: hidden;
+        }
+
+        .dg.a{
+            position:absolute;
+            top:50px;
+            right: 0%
+        }
+
+        .logo {
+            padding: 3px 3px 3px 3px;
+            margin-right: 5px;
+            margin-top: 3px;
+            width:40px;
+            height: 40px;
+
+        }
+
 
     </style>
 
 </head>
 
 <body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="pull-left img-responsive" href="#"><img class="logo" src="img/logo.png"></a>
+            <a class="navbar-brand" href="#">CommScope <small>- An Interactive visualization for analyzing emerging issues of KOC (Korean Online Communities)</small></a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="active"><a href="#">About</a></li>
+            <li id="gui_control" class="active"><a href="#">Setting</a></li>
+        </ul>
+    </div>
+
+</nav>
+
 <div id="container" style="width:100%; height:100%;">
 
-    <h1 class="page_title" style="left: 30px; top: 20px; position: absolute">CommScope
-        <div class="sub_page_title">
-            An Interactive visualization for analyzing emerging issues of KOC (Korean Online Communities)
-        </div>
+<!--
+    <h1 class="page_title" style="left: 30px; top: 50px; position: absolute">CommScope
+        &lt;!&ndash;<div class="sub_page_title">&ndash;&gt;
+            &lt;!&ndash;An Interactive visualization for analyzing emerging issues of KOC (Korean Online Communities)&ndash;&gt;
+        &lt;!&ndash;</div>&ndash;&gt;
+        <small class="sub_page_title"></br>An Interactive visualization for analyzing emerging issues of KOC (Korean Online Communities)</small>
 
     </h1>
+-->
 
     <!--<div id="candidates_images" style="left: 40px; top: 200px; position: absolute;">-->
 
     <div id="image_wrapper">
 
-        <div id="current_network" style="left: 40px; top: 15%; position:absolute; ">
+        <div id="current_network" style="left: 40px; top: 10%; position:absolute; ">
 
         </div>
 
-        <div id="candidates_images" style="left: 40px; top: 20%; position: absolute;">
-            <button class="network_btn" type="candidate" name="Global_candidates" width="90" height="110">Global Candidates</button>
-            <img class="network_btn" type="candidate" src="./img/Ahn_cheol.png" name="AhnCheolSoo" width="90" height="110">
-            <img class="network_btn" type="candidate" src="./img/Moon.png" name="MoonJaeIn" width="90" height="110">
-            <img class="network_btn" type="candidate" src="./img/Yoo.png" name="YooSeongMin" width="90" height="110">
-            <img class="network_btn" type="candidate" src="./img/JaeMyung.PNG" name="LeeJaeMyung" width="90" height="110">
-            <img class="network_btn" type="candidate" src="./img/KyoAhn.png" name="HwangKyoAhn" width="90" height="110">
-            <!--<img class="candidates" src="./img/SangJung.png" name="ShimSangJung" width="90" height="110">-->
-            <img class="network_btn" type="candidate" src="./img/HeeJung.png" name="AhnHeeJung" width="90" height="110">
+        <div id="candidates_images" style="left: 40px; top: 15%; position: absolute;">
+
+                <img class="root_network" type="candidate" src="./img/Button_globe.png" name="Global_candidate" width="25" height="25">Candidates</img>
+            <div class="candidate_container" style="border-style: solid; border-color:grey">
+                <img class="network_btn" type="candidate" src="./img/Ahn_cheol.png" name="AhnCheolSoo" width="90" height="110">
+                <img class="network_btn" type="candidate" src="./img/Moon.png" name="MoonJaeIn" width="90" height="110">
+                <img class="network_btn" type="candidate" src="./img/Yoo.png" name="YooSeongMin" width="90" height="110">
+                <img class="network_btn" type="candidate" src="./img/JaeMyung.PNG" name="LeeJaeMyung" width="90" height="110">
+                <!--<img class="network_btn" type="candidate" src="./img/KyoAhn.png" name="HwangKyoAhn" width="90" height="110">-->
+                <!--<img class="candidates" src="./img/SangJung.png" name="ShimSangJung" width="90" height="110">-->
+                <img class="network_btn" type="candidate" src="./img/HeeJung.png" name="AhnHeeJung" width="90" height="110">
+
+            </div>
+
         </div>
 
-        <div id="communities_images" style="left: 200px; top: 20%; position: absolute">
-            <button class="network_btn" type="community" name="Global_communities" width="90" height="110">Global Communities</button>
-            <img class="network_btn" type="community" src="./img/일베.png" name="ilbe" width = "110" height="90">
-            <img class="network_btn" type="community" src="./img/디씨2.png" name="DC" width = "110" height="90">
-            <img class="network_btn" type="community" src="./img/엠팍.png" name="MP" width = "110" height="90">
-            <img class="network_btn" type="community" src="./img/오유.png" name="OU" width = "110" height="90">
+        <div id="communities_images" style="left: 200px; top: 15%; position: absolute">
+
+            <img class="root_network" type="community" src="./img/Button_globe.png" name="Global_community" width="25" height="25">Communities</img>
+
+            <div class="community_container">
+                <img class="network_btn" type="community" src="./img/일베.png" name="ilbe" width = "110" height="90">
+                <img class="network_btn" type="community" src="./img/디씨2.png" name="dc" width = "110" height="90">
+                <img class="network_btn" type="community" src="./img/엠팍.png" name="mp" width = "110" height="90">
+                <img class="network_btn" type="community" src="./img/오유.png" name="ou" width = "110" height="90">
+            </div>
         </div>
 
 
