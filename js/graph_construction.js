@@ -177,7 +177,13 @@ function AjaxFileRead(pathName) {
 
             // set the threshold to show label as mean degree
             console.log(degreeSum);
-            renderer.initLabels(degree = degreeSum/parsed['nodes'].length);
+
+            // 평균 sum 이상인 노드들에 대한 라벨만 표시
+            // renderer.initLabels(degree = degreeSum/parsed['nodes'].length);
+
+            // 모든 라벨 표시
+            renderer.initLabels(degree = 0);
+
             console.log("3. Finished graph construct");
 
             console.log("4. stop the layout after loading the data");

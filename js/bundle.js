@@ -7613,7 +7613,13 @@ function AjaxFileRead(pathName) {
 
             // set the threshold to show label as mean degree
             console.log(degreeSum);
-            renderer.initLabels(degree = degreeSum/parsed['nodes'].length);
+
+            // 평균 sum 이상인 노드들에 대한 라벨만 표시
+            // renderer.initLabels(degree = degreeSum/parsed['nodes'].length);
+
+            // 모든 라벨 표시
+            renderer.initLabels(degree = 0);
+
             console.log("3. Finished graph construct");
 
             console.log("4. stop the layout after loading the data");
@@ -9667,7 +9673,7 @@ function nodeView(scene) {
  */
 module.exports = createTooltipView;
 
-var tooltipStyle = require('../style/style.js');
+var tooltipStyle = require('../style/tooltip_style.js');
 var insertCSS = require('insert-css');
 
 var elementClass = require('element-class');
@@ -9692,11 +9698,17 @@ function createTooltipView(container) {
     if (!tooltipDom) createTooltip();
     tooltipDom.style.left = e.x + 'px';
     tooltipDom.style.top = e.y + 'px';
+
+    tooltipDom.innerHTML =
+        "name: " + node.data.label +
+        "<br><span>size: " + node.data.size + "</span>";
+
+    /*
     tooltipDom.innerHTML =
         "name: " + node.data.label +
         "<br><span>color: " + node.data.color + "</span>" +
         "<br><span>size: " + node.data.size + "</span>";
-
+    */
     tooltipVisible = true;
   }
 
@@ -9755,7 +9767,7 @@ function createTooltipView(container) {
 
 }
 
-},{"../style/style.js":122,"element-class":56,"insert-css":79}],51:[function(require,module,exports){
+},{"../style/tooltip_style.js":122,"element-class":56,"insert-css":79}],51:[function(require,module,exports){
 module.exports = createNodeSettings;
 
 function createNodeSettings(gui, renderer) {
@@ -129705,8 +129717,8 @@ function defaultLink(/* link */) {
 },{"pixel.layout":112}],122:[function(require,module,exports){
 module.exports = [
 '.ngraph-tooltip {',
-    'width: 150px;',
-    'height: 200px;',
+    'width: 100px;',
+    'height: 50px;',
 '  position: absolute;',
 '  color: white;',
 '  pointer-events: none;',
