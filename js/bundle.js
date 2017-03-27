@@ -7858,7 +7858,12 @@ function twosteps_network(current, target){
 function graphClear(){
     // graph clear
     graph.clear();
-    renderer.clearHtmlLabels();
+
+    // label clear
+    // renderer.clearHtmlLabels();
+    renderer.clearThreeLabels();
+    renderer.clearRemains();
+
     // set renderer as unstable to enable 3d force-atlas Layout
     renderer.stable(false);
 }
@@ -7921,7 +7926,8 @@ function initEventHandler() {
 
     renderer.on('nodeclick', showNodeDetails);
     renderer.on('nodedblclick', function(node) {
-        renderer.showNode(node.id, 300);
+        // renderer.showNode(node.id, 300);
+        renderer.showNodeTWEEN(node.id);
         renderer.setSelectedNode(node);
         // activeNeighbors(node);
         console.log(node);
@@ -7929,8 +7935,6 @@ function initEventHandler() {
     });
 
 }
-
-
 
 
 
@@ -8147,7 +8151,8 @@ function filedRead() {
 },{"../nodeSettings.js":51,"./../js/d3_chart.js":35,"./../js/index.js":37,"config.pixel":53,"d3":55,"element-class":56,"http":25,"jquery":80,"ngraph.graph":91}],37:[function(require,module,exports){
 var THREE = require('three');
 var TrackballControls = require('three-trackballcontrols');
-
+var text2D = require('three-text2d');
+var TWEEN = require('tween.js');
 
 module.exports = pixel;
 
@@ -8167,7 +8172,8 @@ var createTooltipView = require('./../lib/tooltip.js');
 var createAutoFit = require('./../lib/autoFit.js');
 var createInput = require('./../lib/input.js');
 var validateOptions = require('./../options.js');
-var flyTo = require('./../lib/flyTo.js');
+var flyModule = require('./../lib/flyTo.js');
+var flyTo = flyModule();
 
 var makeActive = require('./../lib/makeActive.js');
 
@@ -8215,6 +8221,7 @@ function pixel(graph, options) {
      * @param {string} nodeId identifier of the node to show
      */
     showNode: showNode,
+    showNodeTWEEN: showNodeTWEEN,
 
     /**
      * Allows clients to provide a callback function, which is invoked before
@@ -8298,7 +8305,10 @@ function pixel(graph, options) {
     // setSelectedNode to active neighborhoods
     setSelectedNode: setSelectedNode,
     initLabels: initLabels,
-    clearHtmlLabels: clearHtmlLabels
+    clearHtmlLabels: clearHtmlLabels,
+    clearThreeLabels: clearThreeLabels,
+    clearRemains: clearRemains
+
 
 
   };
@@ -8330,6 +8340,7 @@ function pixel(graph, options) {
   var originLinks = [];
 
   var labelsToShow = [];
+  var labelsSprites = [];
 
   var TrackballController;
 
@@ -8364,7 +8375,25 @@ function pixel(graph, options) {
 
   function clearHtmlLabels(){
     labelsToShow.length = 0;
-    tooltipView.delectLabeltip();
+    tooltipView.deleteLabeltip();
+  }
+
+  function clearThreeLabels(){
+      labelsToShow.length = 0;
+
+      labelsSprites.forEach(function (sprite) {
+        scene.remove( scene.getObjectByName(sprite.name));
+      });
+
+      labelsSprites.length = 0;
+
+  }
+
+  function clearRemains() {
+
+      selectedNode = undefined;
+      originLinks = [];
+
   }
 
   function run() {
@@ -8397,37 +8426,68 @@ function pixel(graph, options) {
     }
 
     var labelPositions = [];
-    labelsToShow.forEach(function (node) {
-        labelPositions.push(toScreenPosition(getNode(node.id).position));
-    });
+    // ********* This code is for drawing label using ThreeJs *******************
+    for(var i=0; i<labelsToShow.length; i++){
+        var pos = getNode(labelsToShow[i].id).position;
+        labelsSprites[i].position.set(pos.x, pos.y, pos.z+5);
+    }
+    // ********************************************************
 
 
-    // 쓰레숄드 이상인 노드 visible
-    tooltipView.showLabels(labelPositions);
+    // ********* This code is for drawing label using HTML *******************
+    // If you use this code using initLabelsHTML() and others
 
     // labelsToShow.forEach(function (node) {
-    //
-    //    tooltipView.showLabel(
-    //        toScreenPosition(getNode(node.id).position), node.label
-    //    );
+    //     labelPositions.push(toScreenPosition(getNode(node.id).position));
     // });
+    // 쓰레숄드 이상인 노드의 html 라벨 visible
+    // tooltipView.showLabels(labelPositions);
+
 
     // 트랙볼컨트롤 업데이트.
     TrackballController.update();
+
+      // TWEEEN 업데이트
+      TWEEN.update();
 
 
     renderer.render(scene, camera);
   }
 
+
+
+    // ********* This code is for drawing label using ThreeJs *******************
   function initLabels(degree) {
       graph.forEachNode(function (node) {
+              if (node.data.size > degree) {
+                  labelsToShow.push(
+                      {
+                          "id": node.id,
+                          "label":node.data.label
+                      }
+                  );
+
+                  var sprite = new text2D.SpriteText2D(node.data.label, {
+                      align: text2D.textAlign.right,
+                      font: '15px Arial', fillstyle: '#333', antialias: true
+                  });
+                  sprite.name = node.data.label;
+                  labelsSprites.push(sprite);
+                  scene.add(sprite);
+              }
+          });
+    }
+
+    // ********* This code is for drawing label using HTML *******************
+  function initLabelsHTML(degree) {
+      graph.forEachNode(function (node) {
           if(node.data.size > degree){
-            labelsToShow.push(
-                {
-                    "id": node.id,
-                    "label":node.data.label
-                }
-          );
+              labelsToShow.push(
+                  {
+                      "id": node.id,
+                      "label":node.data.label
+                  }
+              );
           }
       });
 
@@ -8549,6 +8609,12 @@ function pixel(graph, options) {
 
     scene.add(sphere);
 */
+
+      // 텍스트 생성 테스트
+     /* var sprite = new text2D.SpriteText2D("박흥석", { align: text2D.textAlign.center,
+          font: '40px Arial', fillStyle: '#333' , antialias: true });
+      console.log(sprite);
+      scene.add(sprite);*/
 
     if (options.autoFit) autoFitController = createAutoFit(nodeView, camera);
 
@@ -8683,7 +8749,15 @@ function pixel(graph, options) {
 
   function showNode(nodeId, stopDistance) {
     stopDistance = typeof stopDistance === 'number' ? stopDistance : 500;
-    flyTo(camera, layout.getNodePosition(nodeId), stopDistance);
+    flyTo.flyTo(camera, layout.getNodePosition(nodeId), stopDistance);
+
+  }
+
+  function showNodeTWEEN(nodeId, stopDistance) {
+    console.log("hello")
+
+      flyTo.flyTo_smooth(camera, getNode(nodeId).position);
+      // flyTo.flyTo_smooth(camera, layout.getNodePosition(nodeId));
 
   }
 
@@ -8758,7 +8832,7 @@ function verifyContainerDimensions(container) {
   }
 }
 
-},{"./../lib/autoFit.js":38,"./../lib/edgeView.js":41,"./../lib/flyTo.js":42,"./../lib/input.js":44,"./../lib/makeActive.js":46,"./../lib/nodeView.js":49,"./../lib/tooltip.js":50,"./../options.js":121,"ngraph.events":81,"three":119,"three-trackballcontrols":114}],38:[function(require,module,exports){
+},{"./../lib/autoFit.js":38,"./../lib/edgeView.js":41,"./../lib/flyTo.js":42,"./../lib/input.js":44,"./../lib/makeActive.js":46,"./../lib/nodeView.js":49,"./../lib/tooltip.js":50,"./../options.js":127,"ngraph.events":81,"three":125,"three-text2d":118,"three-trackballcontrols":120,"tween.js":126}],38:[function(require,module,exports){
 var flyTo = require('./flyTo.js');
 module.exports = createAutoFit;
 
@@ -8814,7 +8888,7 @@ function createParticleMaterial() {
   return material;
 }
 
-},{"./defaultTexture.js":40,"./node-fragment.js":47,"./node-vertex.js":48,"three":119}],40:[function(require,module,exports){
+},{"./defaultTexture.js":40,"./node-fragment.js":47,"./node-vertex.js":48,"three":125}],40:[function(require,module,exports){
 module.exports = 'data:image/png;base64,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';
 
 },{}],41:[function(require,module,exports){
@@ -8958,7 +9032,7 @@ function edgeView(scene) {
   }
 }
 
-},{"three":119}],42:[function(require,module,exports){
+},{"three":125}],42:[function(require,module,exports){
 /**
  * Moves camera to given point, and stops it and given radius
  */
@@ -8968,44 +9042,72 @@ var TWEEN = require('tween.js');
 
 module.exports = flyTo;
 
-function flyTo(camera, to, radius) {
-  var cameraOffset = radius / Math.tan(Math.PI / 180.0 * camera.fov * 0.5);
 
-  var from = {
-    x: camera.position.x,
-    y: camera.position.y,
-    z: camera.position.z,
-  };
+function flyTo() {
 
-  camera.lookAt(new THREE.Vector3(to.x, to.y, to.z));
-  var cameraEndPos = intersect(from, to, cameraOffset);
-  camera.position.x = cameraEndPos.x;
-  camera.position.y = cameraEndPos.y;
-  camera.position.z = cameraEndPos.z;
+    return {
+        flyTo: flyTo,
+        flyTo_smooth: flyTo_smooth
+    };
+
+    function flyTo(camera, to, radius) {
+        var cameraOffset = radius / Math.tan(Math.PI / 180.0 * camera.fov * 0.5);
+
+        var from = {
+            x: camera.position.x,
+            y: camera.position.y,
+            z: camera.position.z,
+        };
+
+        camera.lookAt(new THREE.Vector3(to.x, to.y, to.z));
+        var cameraEndPos = intersect(from, to, cameraOffset);
+        camera.position.x = cameraEndPos.x;
+        camera.position.y = cameraEndPos.y;
+        camera.position.z = cameraEndPos.z;
+    }
+
+
+    function flyTo_smooth (camera, targetPosition) {
+
+        console.log("hello again")
+        console.log(camera)
+        console.log(targetPosition)
+
+        var from = {
+            x: camera.position.x,
+            y: camera.position.y,
+            z: camera.position.z
+        };
+
+        var to = {
+            x: targetPosition.x,
+            y: targetPosition.y,
+            z: targetPosition.z
+        };
+        var tween = new TWEEN.Tween(from)
+            .to(to, 600)
+            .easing(TWEEN.Easing.Linear.None)
+            .onUpdate(function () {
+                camera.position.set(this.x, this.y, this.z);
+                camera.lookAt(new THREE.Vector3(0, 0, 0));
+            })
+            .onComplete(function () {
+                cameraAdjust = true;
+                camera.lookAt(new THREE.Vector3(0, 0, 0));
+                console.log(camera.position);
+
+            })
+            .start();
+
+    };
+
+
+
+
 }
 
-var flyTo_smooth = function (camera, to, radius) {
-  console.log("hello!");
-  console.log(camera);
-  console.log(to);
-  var cameraOffset = radius / Math.tan(Math.PI / 180.0 * camera.fov * 0.5);
 
-  var from = {
-      x: camera.position.x,
-      y: camera.position.y,
-      z: camera.position.z,
-  };
-
-  camera.lookAt(new THREE.Vector3(to.x, to.y, to.z));
-
-  // var cameraEndPos = intersect(from, to, cameraOffset);
-  // camera.position.x = cameraEndPos.x;
-  // camera.position.y = cameraEndPos.y;
-  // camera.position.z = cameraEndPos.z;
-};
-
-module.exports.flyTo_smooth = flyTo_smooth;
-},{"./intersect.js":45,"three":119,"tween.js":120}],43:[function(require,module,exports){
+},{"./intersect.js":45,"three":125,"tween.js":126}],43:[function(require,module,exports){
 /**
  * Gives an index of a node under mouse coordinates
  */
@@ -9259,7 +9361,7 @@ function createHitTest(domElement) {
   }
 }
 
-},{"ngraph.events":81,"three":119}],44:[function(require,module,exports){
+},{"ngraph.events":81,"three":125}],44:[function(require,module,exports){
 var FlyControls = require('three.fly');
 var eventify = require('ngraph.events');
 var THREE = require('three');
@@ -9343,7 +9445,7 @@ function createInput(camera, graph, domElement) {
   }
 }
 
-},{"./hitTest.js":43,"ngraph.events":81,"three":119,"three.fly":116}],45:[function(require,module,exports){
+},{"./hitTest.js":43,"ngraph.events":81,"three":125,"three.fly":122}],45:[function(require,module,exports){
 module.exports = intersect;
 
 /**
@@ -9667,7 +9769,7 @@ function nodeView(scene) {
   }
 }
 
-},{"./createMaterial.js":39,"three":119}],50:[function(require,module,exports){
+},{"./createMaterial.js":39,"three":125}],50:[function(require,module,exports){
 /**
  * manages view for tooltips shown when user hover over a node
  */
@@ -9677,6 +9779,7 @@ var tooltipStyle = require('../style/tooltip_style.js');
 var insertCSS = require('insert-css');
 
 var elementClass = require('element-class');
+var threeText2D = require('three-text2d');
 
 function createTooltipView(container) {
   insertCSS(tooltipStyle);
@@ -9686,7 +9789,7 @@ function createTooltipView(container) {
     hide: hide,
     showLabels: showLabels,
     createLabeltip: createLabeltip,
-    delectLabeltip: delectLabeltip
+    deleteLabeltip: deleteLabeltip
   };
 
   var tooltipDom, tooltipVisible;
@@ -9731,15 +9834,16 @@ function createTooltipView(container) {
   }
 
 
+  // HTML에 라벨 때려박음. parameter: nodes(네트워크 위에 라벨표시할 노드들)
   function showLabels(nodes) {
-    for(var i=0; i<nodes.length; i++){
+      for(var i=0; i<nodes.length; i++){
 
-      labelDoms[i].style.left = nodes[i].x + 'px';
-      labelDoms[i].style.top = nodes[i].y + 'px';
-      labelDoms[i].style.position = "absolute";
-      labelDoms[i].style.color = 'rgba(255, 255, 255, 0.8)';
-      labelDoms[i].style.background = 'rgba(0, 0, 0, 0)';
-    }
+          labelDoms[i].style.left = nodes[i].x + 'px';
+          labelDoms[i].style.top = nodes[i].y + 'px';
+          labelDoms[i].style.position = "absolute";
+          labelDoms[i].style.color = 'rgba(255, 255, 255, 0.8)';
+          labelDoms[i].style.background = 'rgba(0, 0, 0, 0)';
+      }
   }
 
   function createLabeltip(tips) {
@@ -9755,7 +9859,7 @@ function createTooltipView(container) {
 
   }
   
-  function delectLabeltip() {
+  function deleteLabeltip() {
       var tips = document.getElementsByClassName("label-tooltip");
 
       while(tips[0]){
@@ -9767,7 +9871,7 @@ function createTooltipView(container) {
 
 }
 
-},{"../style/tooltip_style.js":122,"element-class":56,"insert-css":79}],51:[function(require,module,exports){
+},{"../style/tooltip_style.js":128,"element-class":56,"insert-css":79,"three-text2d":118}],51:[function(require,module,exports){
 module.exports = createNodeSettings;
 
 function createNodeSettings(gui, renderer) {
@@ -43950,6 +44054,296 @@ function createLayout(graph, options) {
 },{"ngraph.events":113,"ngraph.forcelayout3d":83}],113:[function(require,module,exports){
 arguments[4][81][0].apply(exports,arguments)
 },{"dup":81}],114:[function(require,module,exports){
+"use strict";
+var THREE = require("three");
+var utils_1 = require("./utils");
+var CanvasText = (function () {
+    function CanvasText() {
+        this.textWidth = null;
+        this.textHeight = null;
+        this.canvas = document.createElement('canvas');
+        this.ctx = this.canvas.getContext('2d');
+    }
+    Object.defineProperty(CanvasText.prototype, "width", {
+        get: function () { return this.canvas.width; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(CanvasText.prototype, "height", {
+        get: function () { return this.canvas.height; },
+        enumerable: true,
+        configurable: true
+    });
+    CanvasText.prototype.drawText = function (text, ctxOptions) {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.font = ctxOptions.font;
+        this.textWidth = Math.ceil(this.ctx.measureText(text).width);
+        this.textHeight = utils_1.getFontHeight(this.ctx.font);
+        this.canvas.width = THREE.Math.nextPowerOfTwo(this.textWidth);
+        this.canvas.height = THREE.Math.nextPowerOfTwo(this.textHeight);
+        this.ctx.font = ctxOptions.font;
+        this.ctx.fillStyle = ctxOptions.fillStyle;
+        this.ctx.textAlign = 'left';
+        this.ctx.textBaseline = 'top';
+        this.ctx.shadowColor = ctxOptions.shadowColor;
+        this.ctx.shadowBlur = ctxOptions.shadowBlur;
+        this.ctx.shadowOffsetX = ctxOptions.shadowOffsetX;
+        this.ctx.shadowOffsetY = ctxOptions.shadowOffsetY;
+        this.ctx.fillText(text, 0, 0);
+        return this.canvas;
+    };
+    return CanvasText;
+}());
+exports.CanvasText = CanvasText;
+
+},{"./utils":119,"three":125}],115:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var THREE = require("three");
+var Text2D_1 = require("./Text2D");
+var MeshText2D = (function (_super) {
+    __extends(MeshText2D, _super);
+    function MeshText2D(text, options) {
+        if (text === void 0) { text = ''; }
+        if (options === void 0) { options = {}; }
+        return _super.call(this, text, options) || this;
+    }
+    MeshText2D.prototype.raycast = function () {
+        this.mesh.raycast.apply(this.mesh, arguments);
+    };
+    MeshText2D.prototype.updateText = function () {
+        this.cleanUp(); // cleanup previous texture
+        this.canvas.drawText(this._text, {
+            font: this._font,
+            fillStyle: this._fillStyle,
+            shadowBlur: this._shadowBlur,
+            shadowColor: this._shadowColor,
+            shadowOffsetX: this._shadowOffsetX,
+            shadowOffsetY: this._shadowOffsetY,
+        });
+        this.texture = new THREE.Texture(this.canvas.canvas);
+        this.texture.needsUpdate = true;
+        this.applyAntiAlias();
+        if (!this.material) {
+            this.material = new THREE.MeshBasicMaterial({ map: this.texture, side: this.side });
+            this.material.transparent = true;
+        }
+        else {
+            this.material.map = this.texture;
+        }
+        if (!this.mesh) {
+            this.geometry = new THREE.PlaneGeometry(this.canvas.width, this.canvas.height);
+            this.mesh = new THREE.Mesh(this.geometry, this.material);
+            this.add(this.mesh);
+        }
+        this.mesh.position.x = ((this.canvas.width / 2) - (this.canvas.textWidth / 2)) + ((this.canvas.textWidth / 2) * this.align.x);
+        this.mesh.position.y = (-this.canvas.height / 2) + ((this.canvas.textHeight / 2) * this.align.y);
+        // manually update geometry vertices
+        this.geometry.vertices[0].x = this.geometry.vertices[2].x = -this.canvas.width / 2;
+        this.geometry.vertices[1].x = this.geometry.vertices[3].x = this.canvas.width / 2;
+        this.geometry.vertices[0].y = this.geometry.vertices[1].y = this.canvas.height / 2;
+        this.geometry.vertices[2].y = this.geometry.vertices[3].y = -this.canvas.height / 2;
+        this.geometry.verticesNeedUpdate = true;
+    };
+    return MeshText2D;
+}(Text2D_1.Text2D));
+exports.MeshText2D = MeshText2D;
+
+},{"./Text2D":117,"three":125}],116:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var THREE = require("three");
+var Text2D_1 = require("./Text2D");
+var SpriteText2D = (function (_super) {
+    __extends(SpriteText2D, _super);
+    function SpriteText2D() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    SpriteText2D.prototype.raycast = function () {
+        return this.sprite.raycast.apply(this.sprite, arguments);
+    };
+    SpriteText2D.prototype.updateText = function () {
+        this.canvas.drawText(this._text, {
+            font: this._font,
+            fillStyle: this._fillStyle
+        });
+        // cleanup previous texture
+        this.cleanUp();
+        this.texture = new THREE.Texture(this.canvas.canvas);
+        this.texture.needsUpdate = true;
+        this.applyAntiAlias();
+        if (!this.material) {
+            this.material = new THREE.SpriteMaterial({ map: this.texture });
+        }
+        else {
+            this.material.map = this.texture;
+        }
+        if (!this.sprite) {
+            this.sprite = new THREE.Sprite(this.material);
+            this.geometry = this.sprite.geometry;
+            this.add(this.sprite);
+        }
+        this.sprite.scale.set(this.canvas.width, this.canvas.height, 1);
+        this.sprite.position.x = ((this.canvas.width / 2) - (this.canvas.textWidth / 2)) + ((this.canvas.textWidth / 2) * this.align.x);
+        this.sprite.position.y = (-this.canvas.height / 2) + ((this.canvas.textHeight / 2) * this.align.y);
+    };
+    return SpriteText2D;
+}(Text2D_1.Text2D));
+exports.SpriteText2D = SpriteText2D;
+
+},{"./Text2D":117,"three":125}],117:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var THREE = require("three");
+var utils_1 = require("./utils");
+var CanvasText_1 = require("./CanvasText");
+var Text2D = (function (_super) {
+    __extends(Text2D, _super);
+    function Text2D(text, options) {
+        if (text === void 0) { text = ''; }
+        if (options === void 0) { options = {}; }
+        var _this = _super.call(this) || this;
+        _this._font = options.font || '30px Arial';
+        _this._fillStyle = options.fillStyle || '#FFFFFF';
+        _this._shadowColor = options.shadowColor || 'rgba(0, 0, 0, 0)';
+        _this._shadowBlur = options.shadowBlur || 0;
+        _this._shadowOffsetX = options.shadowOffsetX || 0;
+        _this._shadowOffsetY = options.shadowOffsetY || 0;
+        _this.canvas = new CanvasText_1.CanvasText();
+        _this.align = options.align || utils_1.textAlign.center;
+        _this.side = options.side || THREE.DoubleSide;
+        // this.anchor = Label.fontAlignAnchor[ this._textAlign ]
+        _this.antialias = (typeof options.antialias === "undefined") ? true : options.antialias;
+        _this.text = text;
+        return _this;
+    }
+    Object.defineProperty(Text2D.prototype, "width", {
+        get: function () { return this.canvas.textWidth; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Text2D.prototype, "height", {
+        get: function () { return this.canvas.textHeight; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Text2D.prototype, "text", {
+        get: function () { return this._text; },
+        set: function (value) {
+            if (this._text !== value) {
+                this._text = value;
+                this.updateText();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Text2D.prototype, "font", {
+        get: function () { return this._font; },
+        set: function (value) {
+            if (this._font !== value) {
+                this._font = value;
+                this.updateText();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Text2D.prototype, "fillStyle", {
+        get: function () {
+            return this._fillStyle;
+        },
+        set: function (value) {
+            if (this._fillStyle !== value) {
+                this._fillStyle = value;
+                this.updateText();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Text2D.prototype.cleanUp = function () {
+        if (this.texture) {
+            this.texture.dispose();
+        }
+    };
+    Text2D.prototype.applyAntiAlias = function () {
+        if (this.antialias === false) {
+            this.texture.magFilter = THREE.NearestFilter;
+            this.texture.minFilter = THREE.LinearMipMapLinearFilter;
+        }
+    };
+    return Text2D;
+}(THREE.Object3D));
+exports.Text2D = Text2D;
+
+},{"./CanvasText":114,"./utils":119,"three":125}],118:[function(require,module,exports){
+"use strict";
+var SpriteText2D_1 = require("./SpriteText2D");
+exports.SpriteText2D = SpriteText2D_1.SpriteText2D;
+var MeshText2D_1 = require("./MeshText2D");
+exports.MeshText2D = MeshText2D_1.MeshText2D;
+var utils_1 = require("./utils");
+exports.textAlign = utils_1.textAlign;
+
+},{"./MeshText2D":115,"./SpriteText2D":116,"./utils":119}],119:[function(require,module,exports){
+"use strict";
+var THREE = require("three");
+exports.textAlign = {
+    center: new THREE.Vector2(0, 0),
+    left: new THREE.Vector2(1, 0),
+    topLeft: new THREE.Vector2(1, -1),
+    topRight: new THREE.Vector2(-1, -1),
+    right: new THREE.Vector2(-1, 0),
+    bottomLeft: new THREE.Vector2(1, 1),
+    bottomRight: new THREE.Vector2(-1, 1),
+};
+var fontHeightCache = {};
+function getFontHeight(fontStyle) {
+    var result = fontHeightCache[fontStyle];
+    if (!result) {
+        var body = document.getElementsByTagName('body')[0];
+        var dummy = document.createElement('div');
+        var dummyText = document.createTextNode('MÉq');
+        dummy.appendChild(dummyText);
+        dummy.setAttribute('style', "font:" + fontStyle + ";position:absolute;top:0;left:0");
+        body.appendChild(dummy);
+        result = dummy.offsetHeight;
+        fontHeightCache[fontStyle] = result;
+        body.removeChild(dummy);
+    }
+    return result;
+}
+exports.getFontHeight = getFontHeight;
+
+},{"three":125}],120:[function(require,module,exports){
 /**
  * @author Eberhard Graether / http://egraether.com/
  * @author Mark Lundin 	/ http://mark-lundin.com
@@ -44591,7 +44985,7 @@ function preventEvent( event ) { event.preventDefault(); }
 
 TrackballControls.prototype = Object.create( THREE.EventDispatcher.prototype );
 
-},{"three":115}],115:[function(require,module,exports){
+},{"three":121}],121:[function(require,module,exports){
 var self = self || {};// File:src/Three.js
 
 /**
@@ -85161,7 +85555,7 @@ if (typeof exports !== 'undefined') {
   this['THREE'] = THREE;
 }
 
-},{}],116:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 /**
  * @author James Baicoianu / http://www.baicoianu.com/
  * Source: https://github.com/mrdoob/three.js/blob/master/examples/js/controls/FlyControls.js
@@ -85439,7 +85833,7 @@ function fly(camera, domElement, THREE) {
   }
 }
 
-},{"./keymap.js":117,"ngraph.events":118}],117:[function(require,module,exports){
+},{"./keymap.js":123,"ngraph.events":124}],123:[function(require,module,exports){
 /**
  * Defines default key bindings for the controls
  */
@@ -85462,9 +85856,9 @@ function createKeyMap() {
   };
 }
 
-},{}],118:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 arguments[4][81][0].apply(exports,arguments)
-},{"dup":81}],119:[function(require,module,exports){
+},{"dup":81}],125:[function(require,module,exports){
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
@@ -128766,7 +129160,7 @@ arguments[4][81][0].apply(exports,arguments)
 
 })));
 
-},{}],120:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 (function (process){
 /**
  * Tween.js - Licensed under the MIT license
@@ -129652,7 +130046,7 @@ TWEEN.Interpolation = {
 })(this);
 
 }).call(this,require('_process'))
-},{"_process":13}],121:[function(require,module,exports){
+},{"_process":13}],127:[function(require,module,exports){
 /**
  * This file contains all possible configuration optins for the renderer
  */
@@ -129714,7 +130108,7 @@ function defaultLink(/* link */) {
   return { fromColor: 0xFFFFFF,  toColor: 0xFFFFFF };
 }
 
-},{"pixel.layout":112}],122:[function(require,module,exports){
+},{"pixel.layout":112}],128:[function(require,module,exports){
 module.exports = [
 '.ngraph-tooltip {',
     'width: 100px;',

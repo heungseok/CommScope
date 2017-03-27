@@ -422,7 +422,12 @@ function twosteps_network(current, target){
 function graphClear(){
     // graph clear
     graph.clear();
-    renderer.clearHtmlLabels();
+
+    // label clear
+    // renderer.clearHtmlLabels();
+    renderer.clearThreeLabels();
+    renderer.clearRemains();
+
     // set renderer as unstable to enable 3d force-atlas Layout
     renderer.stable(false);
 }
@@ -485,7 +490,8 @@ function initEventHandler() {
 
     renderer.on('nodeclick', showNodeDetails);
     renderer.on('nodedblclick', function(node) {
-        renderer.showNode(node.id, 300);
+        // renderer.showNode(node.id, 300);
+        renderer.showNodeTWEEN(node.id);
         renderer.setSelectedNode(node);
         // activeNeighbors(node);
         console.log(node);
@@ -493,8 +499,6 @@ function initEventHandler() {
     });
 
 }
-
-
 
 
 

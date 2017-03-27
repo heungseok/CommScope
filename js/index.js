@@ -1,6 +1,7 @@
 var THREE = require('three');
 var TrackballControls = require('three-trackballcontrols');
-
+var text2D = require('three-text2d');
+var TWEEN = require('tween.js');
 
 module.exports = pixel;
 
@@ -20,7 +21,8 @@ var createTooltipView = require('./../lib/tooltip.js');
 var createAutoFit = require('./../lib/autoFit.js');
 var createInput = require('./../lib/input.js');
 var validateOptions = require('./../options.js');
-var flyTo = require('./../lib/flyTo.js');
+var flyModule = require('./../lib/flyTo.js');
+var flyTo = flyModule();
 
 var makeActive = require('./../lib/makeActive.js');
 
@@ -68,6 +70,7 @@ function pixel(graph, options) {
      * @param {string} nodeId identifier of the node to show
      */
     showNode: showNode,
+    showNodeTWEEN: showNodeTWEEN,
 
     /**
      * Allows clients to provide a callback function, which is invoked before
@@ -151,7 +154,10 @@ function pixel(graph, options) {
     // setSelectedNode to active neighborhoods
     setSelectedNode: setSelectedNode,
     initLabels: initLabels,
-    clearHtmlLabels: clearHtmlLabels
+    clearHtmlLabels: clearHtmlLabels,
+    clearThreeLabels: clearThreeLabels,
+    clearRemains: clearRemains
+
 
 
   };
@@ -183,6 +189,7 @@ function pixel(graph, options) {
   var originLinks = [];
 
   var labelsToShow = [];
+  var labelsSprites = [];
 
   var TrackballController;
 
@@ -217,7 +224,25 @@ function pixel(graph, options) {
 
   function clearHtmlLabels(){
     labelsToShow.length = 0;
-    tooltipView.delectLabeltip();
+    tooltipView.deleteLabeltip();
+  }
+
+  function clearThreeLabels(){
+      labelsToShow.length = 0;
+
+      labelsSprites.forEach(function (sprite) {
+        scene.remove( scene.getObjectByName(sprite.name));
+      });
+
+      labelsSprites.length = 0;
+
+  }
+
+  function clearRemains() {
+
+      selectedNode = undefined;
+      originLinks = [];
+
   }
 
   function run() {
@@ -250,37 +275,68 @@ function pixel(graph, options) {
     }
 
     var labelPositions = [];
-    labelsToShow.forEach(function (node) {
-        labelPositions.push(toScreenPosition(getNode(node.id).position));
-    });
+    // ********* This code is for drawing label using ThreeJs *******************
+    for(var i=0; i<labelsToShow.length; i++){
+        var pos = getNode(labelsToShow[i].id).position;
+        labelsSprites[i].position.set(pos.x, pos.y, pos.z+5);
+    }
+    // ********************************************************
 
 
-    // 쓰레숄드 이상인 노드 visible
-    tooltipView.showLabels(labelPositions);
+    // ********* This code is for drawing label using HTML *******************
+    // If you use this code using initLabelsHTML() and others
 
     // labelsToShow.forEach(function (node) {
-    //
-    //    tooltipView.showLabel(
-    //        toScreenPosition(getNode(node.id).position), node.label
-    //    );
+    //     labelPositions.push(toScreenPosition(getNode(node.id).position));
     // });
+    // 쓰레숄드 이상인 노드의 html 라벨 visible
+    // tooltipView.showLabels(labelPositions);
+
 
     // 트랙볼컨트롤 업데이트.
     TrackballController.update();
+
+      // TWEEEN 업데이트
+      TWEEN.update();
 
 
     renderer.render(scene, camera);
   }
 
+
+
+    // ********* This code is for drawing label using ThreeJs *******************
   function initLabels(degree) {
       graph.forEachNode(function (node) {
+              if (node.data.size > degree) {
+                  labelsToShow.push(
+                      {
+                          "id": node.id,
+                          "label":node.data.label
+                      }
+                  );
+
+                  var sprite = new text2D.SpriteText2D(node.data.label, {
+                      align: text2D.textAlign.right,
+                      font: '15px Arial', fillstyle: '#333', antialias: true
+                  });
+                  sprite.name = node.data.label;
+                  labelsSprites.push(sprite);
+                  scene.add(sprite);
+              }
+          });
+    }
+
+    // ********* This code is for drawing label using HTML *******************
+  function initLabelsHTML(degree) {
+      graph.forEachNode(function (node) {
           if(node.data.size > degree){
-            labelsToShow.push(
-                {
-                    "id": node.id,
-                    "label":node.data.label
-                }
-          );
+              labelsToShow.push(
+                  {
+                      "id": node.id,
+                      "label":node.data.label
+                  }
+              );
           }
       });
 
@@ -402,6 +458,12 @@ function pixel(graph, options) {
 
     scene.add(sphere);
 */
+
+      // 텍스트 생성 테스트
+     /* var sprite = new text2D.SpriteText2D("박흥석", { align: text2D.textAlign.center,
+          font: '40px Arial', fillStyle: '#333' , antialias: true });
+      console.log(sprite);
+      scene.add(sprite);*/
 
     if (options.autoFit) autoFitController = createAutoFit(nodeView, camera);
 
@@ -536,7 +598,15 @@ function pixel(graph, options) {
 
   function showNode(nodeId, stopDistance) {
     stopDistance = typeof stopDistance === 'number' ? stopDistance : 500;
-    flyTo(camera, layout.getNodePosition(nodeId), stopDistance);
+    flyTo.flyTo(camera, layout.getNodePosition(nodeId), stopDistance);
+
+  }
+
+  function showNodeTWEEN(nodeId, stopDistance) {
+    console.log("hello")
+
+      flyTo.flyTo_smooth(camera, getNode(nodeId).position);
+      // flyTo.flyTo_smooth(camera, layout.getNodePosition(nodeId));
 
   }
 
