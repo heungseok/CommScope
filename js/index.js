@@ -434,7 +434,7 @@ function pixel(graph, options) {
     camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 20000);
     camera.position.x = 0;
     camera.position.y = 0;
-    camera.position.z = 200;
+    camera.position.z = 1000;
 
     // init other camera variables
     cameraPos0 = camera.position.clone();
@@ -549,9 +549,13 @@ function pixel(graph, options) {
   }
 
   function onWindowResize() {
-    camera.aspect = container.clientWidth / container.clientHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    // camera.aspect = container.clientWidth / container.clientHeight;
+    // camera.updateProjectionMatrix();
+    // renderer.setSize(container.clientWidth, container.clientHeight);
+
+      camera.aspect = window.innerHeight / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerHeight, window.innerHeight);
   }
 
   function autoFit() {
