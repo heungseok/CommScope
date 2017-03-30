@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
 
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -56,76 +56,87 @@
             text-anchor: middle;
         }
 
-        .page_title{
-            color: white;
-            position: absolute;
-            margin-left: 30px;
-            /*font-size: 27px;*/
-        }
-        .sub_page_title{
-            color: darkgray;
-            /*font-size: 20px;*/
-        }
         #current_network{
-            font-size: 20px;
-            color: #cecece;
-            background: #363636;
-            border-radius: 16px;
+
+            position: absolute;
+
+            color: white; /* font color */
+            /*background: #363636; !* 글자 안의 배경 *!*/
+            /*border-radius: 16px; !* 글자 배경의 폭 *!*/
             margin: 0 4px 1em 0;
             padding-left: 20px;
             padding-right: 20px;
-            height: 27px;
+            height: 25px;
             display: inline-block;
+            top: 65px;
+            left: 1%;
+            margin-bottom: 10px
 
-            /*
-            background-image: url('./img/cancel.svg');
-            background-repeat: no-repeat;
-            background-position: right;
-            background-position-x: 92%
-            */
         }
 
         .community_container, .candidate_container{
             padding: 10px 10px 10px 10px
+
         }
 
         #candidates_images {
-            width: 120px;
+            width: 6vw;
+            left: 2%;
+            /*top: 15%;*/
+            top: 120px;
+            position: absolute;
+            /*width: 120px;*/
             /*height: 400px;*/
         }
 
         #communities_images {
-            width: 140px;
+            width: 6vw;
+            left: 9%;
+            /*top: 15%;*/
+            top: 120px;
+            position: absolute;
+            margin-left: 20px;
 
+            /*width: 100px;*/
         }
 
         .network_btn, .root_network {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            margin-left: 5px;
             filter: grayscale(100%);
             transition: .3s ease-in-out;
-            border-radius: 25px;
+            border-radius: 20px;
+            /*transform: scale(0.9);*/
+
+        }
+
+        img.root_network{
+            display:block;
+            width: 2.5vw;
+            margin-left: auto;
+            margin-right: auto;
+
+            max-height: 100%;
+            max-width: 100%;
+        }
+
+
+        img.network_btn {
+            display: block;
+            max-height: 90%;
+            max-width: 90%;
+            /*max-height: 100%;*/
+            /*max-width: 100%;*/
+
         }
 
         .network_btn:hover ,.root_network:hover {
-            margin-bottom: 15px;
-            transform: scale(1.2);
-            filter: grayscale(0);
-        }
-
-        .candidates, .communities{
-
             margin-bottom: 20px;
-            filter: grayscale(100%);
-            transition: .3s ease-in-out;
 
-        }
-
-        .candidates:hover, .communities:hover {
-            margin-bottom: 15px;
-            transform: scale(1.2);
+            transform: scale(1.15);
             filter: grayscale(0);
-
         }
+
 
         .keys {
             position: absolute;
@@ -148,7 +159,7 @@
 
         .dg.a{
             position:absolute;
-            top:50px;
+            /*top:5vh;*/
             right: 0%
         }
 
@@ -244,9 +255,103 @@
             color: #ddd;
         }
 
+        /* Responsive Text size */
+        @media all and (max-width: 1200px) { /* screen size until 1200px */
+            body {
+                font-size: 1.5em; /* 1.5x default size */
+            }
+        }
+        @media all and (max-width: 1000px) { /* screen size until 1000px */
+            body {
+                font-size: 1.2em; /* 1.2x default size */
+            }
+        }
+        @media all and (max-width: 800px) { /* screen size until 800px */
+            body {
+                font-size: 1.0em; /* 1.2x default size */
+            }
+        }
+        @media all and (max-width: 500px) { /* screen size until 500px */
+            body {
+                font-size: 0.8em; /* 0.8x default size */
+            }
+        }
+        /* ***************************** */
+        #timeLine {
+            background: url("img/timeLine2.png") no-repeat;
+            background-size: 90%;
+            /*background-position: 20px -10px;*/
+            background-position: center top;
+            position:absolute;
+            bottom: 1.5vh;
+            left: 38vw;
+            width: 20vw;
+            height: 6.5vh;
+            margin-bottom:0;
+
+            padding: 0;
 
 
 
+        }
+        li.time{
+            float: left;
+            display: block;
+            color: white;
+            padding-top: 2vh;
+            width: 14.5%;
+            /*padding-right: 2.8vw;*/
+            text-align: center;
+
+        }
+
+        #timePeriod {
+            position:absolute;
+            bottom: 1.5vh;
+            left: 38vw;
+            width: 20vw;
+            display: block
+
+        }
+
+        .radioGroup{
+            display: inline-block;
+            text-align: center;
+            width: 15%;
+        }
+
+        .radioGroup input{
+            width: 20px;
+            height: 20px;
+            position: relative;
+        }
+
+        .radioGroup input:after{
+            display: block;
+            content: " ";
+            position: absolute;
+            top: 0.5vh;
+            background: #fff;
+            height: 2px;
+            width: 100%;
+            right: -1.5vw;
+        }
+        .radioGroup:last-child input:after{
+            display: none;
+        }
+
+        .radioGroup label{
+            display: block;
+            color:white;
+        }
+
+        .timeline {
+            margin: 20px 0;
+            padding: 0;
+            /*list-style: none;*/
+            /*border-top: 1px solid #fff;*/
+            /*line-height: -0.1em;*/
+        }
     </style>
 
 </head>
@@ -256,62 +361,69 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#rightNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
             <a class="pull-left img-responsive" href="#"><img class="logo" src="img/logo.png"></a>
-            <a class="navbar-brand" href="#">CommScope <small>- An Interactive visualization of public opinions from Korean online communities</small></a>
+            <!--<a class="navbar-brand" href="#">CommScope <small>- An Interactive visualization of public opinions from Korean online communities</small></a>-->
+            <a class="navbar-brand" href="#">CommScope</a>
         </div>
-        <ul class="nav navbar-nav navbar-right">
-            <li id="about" class="active"><a href="#">About</a></li>
-            <li id="gui_control" class="active"><a href="#">Network Setting</a></li>
-        </ul>
+        <div class="collapse navbar-collapse" id="rightNavbar">
+            <ul class="nav navbar-nav navbar-right">
+                <li id="about" class="active"><a href="#">About</a></li>
+                <li id="gui_control" class="active"><a href="#">Network Setting</a></li>
+            </ul>
+
+        </div>
+
     </div>
 
 </nav>
 
 <div id="container" style="width:100%; height:100%;">
 
-<!--
-    <h1 class="page_title" style="left: 30px; top: 50px; position: absolute">CommScope
-        &lt;!&ndash;<div class="sub_page_title">&ndash;&gt;
-            &lt;!&ndash;An Interactive visualization for analyzing emerging issues of KOC (Korean Online Communities)&ndash;&gt;
-        &lt;!&ndash;</div>&ndash;&gt;
-        <small class="sub_page_title"></br>An Interactive visualization for analyzing emerging issues of KOC (Korean Online Communities)</small>
+    <div id="image_wrapper" class="container_fluid" >
 
-    </h1>
--->
+        <h3 id="current_network" >
 
-    <div id="image_wrapper">
+        </h3>
 
-        <div id="current_network" style="left: 40px; top: 10%; position:absolute; ">
+        <div id="candidates_images">
+            <div class = "root_wrapper">
 
-        </div>
+                <img class="root_network" type="candidate" src="./img/Button_globe.png" name="Global_candidate"><span style="display:block; margin-left: auto;
+            margin-right: auto; text-align: center">Candidates</span></img>
+            </div>
 
-        <div id="candidates_images" style="left: 40px; top: 15%; position: absolute;">
-
-                <img class="root_network" type="candidate" src="./img/Button_globe.png" name="Global_candidate" width="25" height="25">Candidates</img>
             <div class="candidate_container" style="border-style: solid; border-color:grey">
-                <img class="network_btn" type="candidate" src="./img/Ahn_cheol.png" name="AhnCheolSoo" width="90" height="110">
-                <img class="network_btn" type="candidate" src="./img/Moon.png" name="MoonJaeIn" width="90" height="110">
-                <img class="network_btn" type="candidate" src="./img/Yoo.png" name="YooSeongMin" width="90" height="110">
-                <img class="network_btn" type="candidate" src="./img/JaeMyung.PNG" name="LeeJaeMyung" width="90" height="110">
-                <!--<img class="network_btn" type="candidate" src="./img/KyoAhn.png" name="HwangKyoAhn" width="90" height="110">-->
-                <!--<img class="candidates" src="./img/SangJung.png" name="ShimSangJung" width="90" height="110">-->
-                <img class="network_btn" type="candidate" src="./img/HeeJung.png" name="AhnHeeJung" width="90" height="110">
-                <img class="network_btn" type="candidate" src="./img/Hong.png" name="HongJoonPyo" width="90" height="110">
-                <img class="network_btn" type="candidate" src="./img/JinTae.png" name="KimJinTae" width="90" height="110">
+
+                <img class="network_btn" type="candidate" src="./img/Ahn_cheol.png" name="AhnCheolSoo">
+                <img class="network_btn" type="candidate" src="./img/Moon.png" name="MoonJaeIn">
+                <img class="network_btn" type="candidate" src="./img/Yoo.png" name="YooSeungMin">
+                <!--<img class="network_btn" type="candidate" src="./img/JaeMyung.PNG" name="LeeJaeMyung">-->
+                <!--<img class="network_btn" type="candidate" src="./img/HeeJung.png" name="AhnHeeJung">-->
+                <img class="network_btn" type="candidate" src="./img/Hong.png" name="HongJoonPyo">
+                <!--<img class="network_btn" type="candidate" src="./img/JinTae.png" name="KimJinTae">-->
 
             </div>
 
         </div>
 
-        <div id="communities_images" style="left: 200px; top: 15%; position: absolute">
+        <div id="communities_images">
+            <div class = "root_wrapper">
 
-            <img class="root_network" type="community" src="./img/Button_globe.png" name="Global_community" width="25" height="25">Communities</img>
+                <img class="root_network" type="community" src="./img/Button_globe.png" name="Global_community"><span style="display:block; margin-left: auto;
+            margin-right: auto; text-align: center">Communities</span></img>
+            </div>
+
 
             <div class="community_container">
-                <img class="network_btn" type="community" src="./img/일베.png" name="ilbe" width = "110" height="90">
-                <img class="network_btn" type="community" src="./img/디씨2.png" name="dc" width = "110" height="90">
-                <img class="network_btn" type="community" src="./img/엠팍.png" name="mp" width = "110" height="90">
-                <img class="network_btn" type="community" src="./img/오유.png" name="ou" width = "110" height="90">
+                <img class="network_btn" type="community" src="./img/일베.png" name="ilbe">
+                <img class="network_btn" type="community" src="./img/디씨2.png" name="dc">
+                <img class="network_btn" type="community" src="./img/엠팍.png" name="mp">
+                <img class="network_btn" type="community" src="./img/오유.png" name="ou">
             </div>
         </div>
 
@@ -321,6 +433,48 @@
     <script src="./js/bundle.js"></script>
 
 </div>
+
+<ul id="timeLine">
+    <li class="time" value="March 1" name="March 1"></li>
+    <li class="time" value="March 2" name="March 2"></li>
+    <li class="time" value="March 3" name="March 3"></li>
+    <li class="time" value="March 4" name="March 4"></li>
+    <li class="time" value="March 5" name="March 5"></li>
+    <li class="time" value="April 1" name="April 1"></li>
+
+
+</ul>
+
+<!--
+
+<div id="timePeriod" class="timeline">
+        <div class="radioGroup">
+            <input type="radio" name="radio" id="my_radio_button_id1" />
+            <label for="my_radio_button_id1">1</label>
+        </div>
+        <div class="radioGroup">
+            <input type="radio" name="radio" id="my_radio_button_id2" />
+            <label for="my_radio_button_id2">2</label>
+        </div>
+        <div class="radioGroup">
+            <input type="radio" name="radio" id="my_radio_button_id3" />
+            <label for="my_radio_button_id3">3</label>
+        </div>
+        <div class="radioGroup">
+            <input type="radio" name="radio" id="my_radio_button_id4" />
+            <label for="my_radio_button_id4">4</label>
+        </div>
+        <div class="radioGroup">
+            <input type="radio" name="radio" id="my_radio_button_id5" />
+            <label for="my_radio_button_id5">5</label>
+        </div>
+        <div class="radioGroup">
+            <input type="radio" name="radio" id="my_radio_button_id6" />
+            <label for="my_radio_button_id6">April 1</label>
+        </div>
+
+</div>
+-->
 
 
 <!-- Modals -->
@@ -352,7 +506,7 @@
 
             <section>
                 <h4>Development</h4>
-                <p>Powered by Three.js, ngraph, and built with browserify</p>
+                <p>Powered by Three.js, ngraph, and built by browserify</p>
 
             </section>
 
@@ -379,7 +533,10 @@
 
     // When the user clicks the button, open the modal
     btn.onclick = function () {
-        modal.style.display = "block";
+        if(modal.style.display== "block")
+            modal.style.display = "none";
+        else
+            modal.style.display = "block";
     }
 
     // When the user clicks on <span> (x), close the modal
@@ -393,6 +550,14 @@
             modal.style.display = "none";
         }
     }
+
+    $("li.time").click(function () {
+        console.log($(this));
+        console.log($(this).attr("value"));
+        console.log($(this).attr("name"));
+
+
+    })
 
 </script>
 

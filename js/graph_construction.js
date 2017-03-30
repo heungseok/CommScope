@@ -33,11 +33,9 @@ var currentName, targetName, pathName;
 var targetType, rootType;
 var combination_network;
 
+var timeList = [];
 
 // var pathName = "test.json";
-
-// declare empty color map
-var color_map = {};
 
 
 var community_map = {
@@ -47,6 +45,24 @@ var community_map = {
     "인벤": "inven",
     "엠팍": "mp"
 };
+
+// declare empty color map for random color generator
+// var color_map = {};
+
+// color palette
+var color_palette = {
+    "0": 0x800000,
+    "1": 0x800080,
+    "2": 0x008000,
+    "3": 0x000080,
+    "4": 0x808000,
+    "5": 0x804080,
+    "6": 0x008080
+}
+
+
+initNetwork();
+
 
 
 // init network
@@ -79,6 +95,8 @@ function initNetwork(){
 
     settingsView = createSettingsView(renderer);
     gui = settingsView.gui();
+    document.getElementById("gui_control").appendChild(settingsView.getGUIDom());
+
     gui_open = false;
     if(gui_open) gui.open();
     else gui.close();
@@ -102,14 +120,11 @@ function initNetwork(){
 
 
     // d3 차트생성
-    // var d3_ui = d3_chart('container2');
-    // d3_ui.init();
+    // var d3_gui = d3_chart('timePeriod');
+    // d3_gui.init();
+    // d3_gui.drawTimePeriod();
 
 }
-
-initNetwork();
-
-
 
 
 function AjaxFileRead(pathName) {
@@ -130,7 +145,7 @@ function AjaxFileRead(pathName) {
             // console.log(parsed);
 
             // init color map
-            initRandomColorMap(parsed['mode_num']);
+            // initRandomColorMap(parsed['mode_num']);
 
             console.log("2. Start Initializing graph ");
             graph.beginUpdate();
@@ -138,21 +153,32 @@ function AjaxFileRead(pathName) {
                 degreeSum += Number(node.size);
 
                 if(node.color){
+                    // This is for the gephi output
                     graph.addNode(node.id, {
                         label: node.label,
                         color: Number(rgb2hex(node.color)),
-                        size: Number(node.size),
+                        size: Number(node.size)*0.1,
                         activated: false
                     });
                 }else if(node.attributes["Modularity Class"]){
                     var module = node.attributes["Modularity Class"];
 
+                    // This is for the color pallete
+                    graph.addNode(node.id,{
+                        label: node.label,
+                        color: color_palette[module],
+                        size: Number(node.size)*0.1,
+                        activated: false
+                    });
+
+                    /* This is for the random color generator
                     graph.addNode(node.id, {
                         label: node.label,
                         color: color_map[module],
-                        size: Number(node.size),
+                        size: Number(node.size)*0.1,
                         activated: false
                     });
+                    */
                 }
 
             });
@@ -164,12 +190,23 @@ function AjaxFileRead(pathName) {
                         activated: false
                     });
                 }else{
+
+                    // This is for the color pallete
+                    graph.addLink(edge.source, edge.target, {
+                        fromColor: color_palette[edge.source_color],
+                        toColor: color_palette[edge.target_color],
+                        // color: rgb2hex("rgb(158,158,198)"),
+                        activated: false
+                    });
+
+                    /* This is for the random color generator
                     graph.addLink(edge.source, edge.target, {
                         fromColor: color_map[edge.source_color],
                         toColor: color_map[edge.target_color],
                         // color: rgb2hex("rgb(158,158,198)"),
                         activated: false
                     });
+                    */
                 }
 
             });
@@ -205,6 +242,39 @@ function AjaxFileRead(pathName) {
 
 
 }
+/*
+
+
+initTimeChart();
+// init Time Slide to show the crawl period
+function initTimeChart() {
+
+    var margin = {top: 100, right: 100, bottom: 100, left: 100},
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    var x = d3.scaleOrdinal()
+        .domain(["apple", "orange", "banana", "grapefruit"])
+        .rangePoints([0, width]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .call(xAxis);
+    
+}
+
+*/
+
 
 
 function initRandomColorMap(color_length) {

@@ -12,9 +12,11 @@ function createD3chart(container_name) {
     var svg;
 
     // Set the dimensions of the canvas / graph
-    var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 600 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom;
+    var margin = {top: 20, right: 60, bottom: 10, left: 60},
+        width = window.innerWidth / 3,
+        height = window.innerHeight / 20;
+        // width = 600 - margin.left - margin.right,
+        // height = 300 - margin.top - margin.bottom;
 
     // var chart_title = "The Frequency of keyword by each online community ";
     // var chart_status = "- overall";
@@ -28,27 +30,94 @@ function createD3chart(container_name) {
         line,
         xAxis, yAxis;
 
+    var time_period = ["0318", "0325", "0401", "0408"];
+
 
     return {
         init: init,
         updateData: updateData
+
     };
 
     function init() {
 
         window.onload = function () {
             var d = document.getElementById(container_name);
-            d.style.width = 600 + 'px';
-            d.style.height = 400 + 'px';
+            d.style.width = 20 + 'vw';
+            d.style.height = 5 + 'vh';
             // d.style.position = "absolute";
             // d.style.left = 10 + 'px';
             // d.style.top = 800 + 'px';
-
             // initialize d3 chart (overall)
-            initD3();
+            // initD3();
+            drawTimePeriod();
         };
 
     }
+
+    function drawTimePeriod(){
+
+        // Adds the svg canvas
+        svg = d3.select('#' + container_name)
+            .append("svg")
+            .attr("width",width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom + 100)
+            // .style("display", "block")
+            // .attr("height", height + margin.top + margin.bottom + 100)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top+ ")");
+            // .attr("transform", "translate(" + margin.left + "," + 100+ ")");
+
+        // Add title of the chart
+        svg.append("text")
+            .attr("x", (width/2))
+            // .attr("y", (margin.top / 2) - 20 )
+            .attr("y", 30)
+            .attr("text-anchor", "middle")
+            .attr("class", "chart-title")
+            // .style("font-size", "20px")
+            // .style("fill", "white")
+            // .text(chart_title + chart_status);
+            .text("Period of crawled data");
+
+
+        // Set the ranges
+        x = d3.scaleBand()
+            .rangeRound([0, width]).padding(0.1);
+
+        x.domain(time_period);
+
+
+        // x = d3.scaleOrdinal()
+        //     .domain(["0318 - 0324", "0325 - 0331", "0401 - 0407"])
+        //     .range([0, width]);
+
+        // define the axes
+        // xAxis = d3.axisBottom().scale(x).ticks(5);
+        // xAxis = d3.axisBottom().scale(x);
+        xAxis = d3.axisBottom().scale(x);
+
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", "translate(0," + -10 + ")")
+            .call(xAxis);
+        // transform: translate(x, y) => g element를 x,y 만큼 이동.
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     function initD3() {
 
@@ -58,17 +127,18 @@ function createD3chart(container_name) {
                .attr("width", width + margin.left + margin.right)
                .attr("height", height + margin.top + margin.bottom + 100)
             .append("g")
-                // .attr("transform", "translate(" + margin.left + "," + margin.top+ ")");
+            // .attr("transform", "translate(" + margin.left + "," + margin.top+ ")");
             .attr("transform", "translate(" + margin.left + "," + 100+ ")");
 
         // Add title of the chart
         svg.append("text")
             .attr("x", (width/2))
             // .attr("y", (margin.top / 2) - 20 )
-            .attr("y", -70)
+            .attr("y", 0)
             .attr("text-anchor", "middle")
             .attr("class", "chart-title")
             .style("font-size", "20px")
+            .style("fill", "white")
             .text(chart_title + chart_status);
             // .text("커뮤니티별 키워드 언급량 ");
 

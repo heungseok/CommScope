@@ -7210,9 +7210,11 @@ function createD3chart(container_name) {
     var svg;
 
     // Set the dimensions of the canvas / graph
-    var margin = {top: 20, right: 20, bottom: 30, left: 50},
-        width = 600 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom;
+    var margin = {top: 20, right: 60, bottom: 10, left: 60},
+        width = window.innerWidth / 3,
+        height = window.innerHeight / 20;
+        // width = 600 - margin.left - margin.right,
+        // height = 300 - margin.top - margin.bottom;
 
     // var chart_title = "The Frequency of keyword by each online community ";
     // var chart_status = "- overall";
@@ -7226,27 +7228,94 @@ function createD3chart(container_name) {
         line,
         xAxis, yAxis;
 
+    var time_period = ["0318", "0325", "0401", "0408"];
+
 
     return {
         init: init,
         updateData: updateData
+
     };
 
     function init() {
 
         window.onload = function () {
             var d = document.getElementById(container_name);
-            d.style.width = 600 + 'px';
-            d.style.height = 400 + 'px';
+            d.style.width = 20 + 'vw';
+            d.style.height = 5 + 'vh';
             // d.style.position = "absolute";
             // d.style.left = 10 + 'px';
             // d.style.top = 800 + 'px';
-
             // initialize d3 chart (overall)
-            initD3();
+            // initD3();
+            drawTimePeriod();
         };
 
     }
+
+    function drawTimePeriod(){
+
+        // Adds the svg canvas
+        svg = d3.select('#' + container_name)
+            .append("svg")
+            .attr("width",width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom + 100)
+            // .style("display", "block")
+            // .attr("height", height + margin.top + margin.bottom + 100)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top+ ")");
+            // .attr("transform", "translate(" + margin.left + "," + 100+ ")");
+
+        // Add title of the chart
+        svg.append("text")
+            .attr("x", (width/2))
+            // .attr("y", (margin.top / 2) - 20 )
+            .attr("y", 30)
+            .attr("text-anchor", "middle")
+            .attr("class", "chart-title")
+            // .style("font-size", "20px")
+            // .style("fill", "white")
+            // .text(chart_title + chart_status);
+            .text("Period of crawled data");
+
+
+        // Set the ranges
+        x = d3.scaleBand()
+            .rangeRound([0, width]).padding(0.1);
+
+        x.domain(time_period);
+
+
+        // x = d3.scaleOrdinal()
+        //     .domain(["0318 - 0324", "0325 - 0331", "0401 - 0407"])
+        //     .range([0, width]);
+
+        // define the axes
+        // xAxis = d3.axisBottom().scale(x).ticks(5);
+        // xAxis = d3.axisBottom().scale(x);
+        xAxis = d3.axisBottom().scale(x);
+
+        // Add the X Axis
+        svg.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", "translate(0," + -10 + ")")
+            .call(xAxis);
+        // transform: translate(x, y) => g element를 x,y 만큼 이동.
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     function initD3() {
 
@@ -7256,17 +7325,18 @@ function createD3chart(container_name) {
                .attr("width", width + margin.left + margin.right)
                .attr("height", height + margin.top + margin.bottom + 100)
             .append("g")
-                // .attr("transform", "translate(" + margin.left + "," + margin.top+ ")");
+            // .attr("transform", "translate(" + margin.left + "," + margin.top+ ")");
             .attr("transform", "translate(" + margin.left + "," + 100+ ")");
 
         // Add title of the chart
         svg.append("text")
             .attr("x", (width/2))
             // .attr("y", (margin.top / 2) - 20 )
-            .attr("y", -70)
+            .attr("y", 0)
             .attr("text-anchor", "middle")
             .attr("class", "chart-title")
             .style("font-size", "20px")
+            .style("fill", "white")
             .text(chart_title + chart_status);
             // .text("커뮤니티별 키워드 언급량 ");
 
@@ -7469,11 +7539,9 @@ var currentName, targetName, pathName;
 var targetType, rootType;
 var combination_network;
 
+var timeList = [];
 
 // var pathName = "test.json";
-
-// declare empty color map
-var color_map = {};
 
 
 var community_map = {
@@ -7483,6 +7551,24 @@ var community_map = {
     "인벤": "inven",
     "엠팍": "mp"
 };
+
+// declare empty color map for random color generator
+// var color_map = {};
+
+// color palette
+var color_palette = {
+    "0": 0x800000,
+    "1": 0x800080,
+    "2": 0x008000,
+    "3": 0x000080,
+    "4": 0x808000,
+    "5": 0x804080,
+    "6": 0x008080
+}
+
+
+initNetwork();
+
 
 
 // init network
@@ -7515,6 +7601,8 @@ function initNetwork(){
 
     settingsView = createSettingsView(renderer);
     gui = settingsView.gui();
+    document.getElementById("gui_control").appendChild(settingsView.getGUIDom());
+
     gui_open = false;
     if(gui_open) gui.open();
     else gui.close();
@@ -7538,14 +7626,11 @@ function initNetwork(){
 
 
     // d3 차트생성
-    // var d3_ui = d3_chart('container2');
-    // d3_ui.init();
+    // var d3_gui = d3_chart('timePeriod');
+    // d3_gui.init();
+    // d3_gui.drawTimePeriod();
 
 }
-
-initNetwork();
-
-
 
 
 function AjaxFileRead(pathName) {
@@ -7566,7 +7651,7 @@ function AjaxFileRead(pathName) {
             // console.log(parsed);
 
             // init color map
-            initRandomColorMap(parsed['mode_num']);
+            // initRandomColorMap(parsed['mode_num']);
 
             console.log("2. Start Initializing graph ");
             graph.beginUpdate();
@@ -7574,21 +7659,32 @@ function AjaxFileRead(pathName) {
                 degreeSum += Number(node.size);
 
                 if(node.color){
+                    // This is for the gephi output
                     graph.addNode(node.id, {
                         label: node.label,
                         color: Number(rgb2hex(node.color)),
-                        size: Number(node.size),
+                        size: Number(node.size)*0.1,
                         activated: false
                     });
                 }else if(node.attributes["Modularity Class"]){
                     var module = node.attributes["Modularity Class"];
 
+                    // This is for the color pallete
+                    graph.addNode(node.id,{
+                        label: node.label,
+                        color: color_palette[module],
+                        size: Number(node.size)*0.1,
+                        activated: false
+                    });
+
+                    /* This is for the random color generator
                     graph.addNode(node.id, {
                         label: node.label,
                         color: color_map[module],
-                        size: Number(node.size),
+                        size: Number(node.size)*0.1,
                         activated: false
                     });
+                    */
                 }
 
             });
@@ -7600,12 +7696,23 @@ function AjaxFileRead(pathName) {
                         activated: false
                     });
                 }else{
+
+                    // This is for the color pallete
+                    graph.addLink(edge.source, edge.target, {
+                        fromColor: color_palette[edge.source_color],
+                        toColor: color_palette[edge.target_color],
+                        // color: rgb2hex("rgb(158,158,198)"),
+                        activated: false
+                    });
+
+                    /* This is for the random color generator
                     graph.addLink(edge.source, edge.target, {
                         fromColor: color_map[edge.source_color],
                         toColor: color_map[edge.target_color],
                         // color: rgb2hex("rgb(158,158,198)"),
                         activated: false
                     });
+                    */
                 }
 
             });
@@ -7641,6 +7748,39 @@ function AjaxFileRead(pathName) {
 
 
 }
+/*
+
+
+initTimeChart();
+// init Time Slide to show the crawl period
+function initTimeChart() {
+
+    var margin = {top: 100, right: 100, bottom: 100, left: 100},
+        width = 960 - margin.left - margin.right,
+        height = 500 - margin.top - margin.bottom;
+
+    var x = d3.scaleOrdinal()
+        .domain(["apple", "orange", "banana", "grapefruit"])
+        .rangePoints([0, width]);
+
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .call(xAxis);
+    
+}
+
+*/
+
 
 
 function initRandomColorMap(color_length) {
@@ -8700,13 +8840,13 @@ function pixel(graph, options) {
   }
 
   function onWindowResize() {
-    // camera.aspect = container.clientWidth / container.clientHeight;
-    // camera.updateProjectionMatrix();
-    // renderer.setSize(container.clientWidth, container.clientHeight);
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
 
-      camera.aspect = window.innerHeight / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerHeight, window.innerHeight);
+      // camera.aspect = window.innerWidth / window.innerHeight;
+      // camera.updateProjectionMatrix();
+      // renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   function autoFit() {
@@ -8849,7 +8989,10 @@ function createAutoFit(nodeView, camera) {
 
   function update() {
     var sphere = nodeView.getBoundingSphere();
-    radius = Math.max(sphere.radius, 500);
+    // radius = Math.max(sphere.radius, 500);
+
+    //  5000 만큼 멀어지기?
+    radius = Math.max(sphere.radius, 5000);
     flyTo(camera, sphere.center, radius);
   }
 
@@ -9781,9 +9924,7 @@ module.exports = createTooltipView;
 
 var tooltipStyle = require('../style/tooltip_style.js');
 var insertCSS = require('insert-css');
-
 var elementClass = require('element-class');
-var threeText2D = require('three-text2d');
 
 function createTooltipView(container) {
   insertCSS(tooltipStyle);
@@ -9875,7 +10016,7 @@ function createTooltipView(container) {
 
 }
 
-},{"../style/tooltip_style.js":128,"element-class":56,"insert-css":79,"three-text2d":118}],51:[function(require,module,exports){
+},{"../style/tooltip_style.js":128,"element-class":56,"insert-css":79}],51:[function(require,module,exports){
 module.exports = createNodeSettings;
 
 function createNodeSettings(gui, renderer) {
@@ -10043,6 +10184,7 @@ function createSettingsView(renderer) {
     show: show,
     destroy: destroy,
     gui: getGUI,
+    getGUIDom: getGUIDom,
     /**
      * List all available settings
      */
@@ -10160,6 +10302,10 @@ function createSettingsView(renderer) {
     // 기존
     addGlobalViewSettings(api);
     addLayoutSettings(api);
+  }
+  function getGUIDom() {
+    return gui.domElement;
+
   }
 }
 

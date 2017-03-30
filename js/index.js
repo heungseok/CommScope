@@ -549,13 +549,13 @@ function pixel(graph, options) {
   }
 
   function onWindowResize() {
-    // camera.aspect = container.clientWidth / container.clientHeight;
-    // camera.updateProjectionMatrix();
-    // renderer.setSize(container.clientWidth, container.clientHeight);
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
 
-      camera.aspect = window.innerHeight / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerHeight, window.innerHeight);
+      // camera.aspect = window.innerWidth / window.innerHeight;
+      // camera.updateProjectionMatrix();
+      // renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
   function autoFit() {
