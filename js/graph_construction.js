@@ -33,6 +33,8 @@ var currentName, targetName, pathName;
 var targetType, rootType;
 var combination_network;
 
+var network_period = "20170318-20170324";
+
 var timeList = [];
 
 // var pathName = "test.json";
@@ -106,6 +108,11 @@ function initNetwork(){
 
     degreeThreshold_ToShowLabel = 30;
 
+    // set checked img to the initial period( 체크 이미지 첫 날짜에 set)
+    console.log(document.getElementById("checked"));
+        // document.getElementById("checked").css("display", "block");
+
+
 
 
     // graph 네트워크 생성
@@ -131,7 +138,7 @@ function AjaxFileRead(pathName) {
     var degreeSum = 0;
 
 
-    http.get({path : "./data/" + pathName, json: true }, function (res) {
+    http.get({path : "./data/" + network_period + "/" + pathName, json: true }, function (res) {
         console.log("0. Load graph file start.");
 
         var body = '';
@@ -242,39 +249,6 @@ function AjaxFileRead(pathName) {
 
 
 }
-/*
-
-
-initTimeChart();
-// init Time Slide to show the crawl period
-function initTimeChart() {
-
-    var margin = {top: 100, right: 100, bottom: 100, left: 100},
-        width = 960 - margin.left - margin.right,
-        height = 500 - margin.top - margin.bottom;
-
-    var x = d3.scaleOrdinal()
-        .domain(["apple", "orange", "banana", "grapefruit"])
-        .rangePoints([0, width]);
-
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
-
-    var svg = d3.select("body").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    svg.append("g")
-        .attr("class", "x axis")
-        .call(xAxis);
-    
-}
-
-*/
-
 
 
 function initRandomColorMap(color_length) {
@@ -294,6 +268,50 @@ function initRandomColorMap(color_length) {
 // d3_ui.init();
 // var test = d3.selectAll('text.lineChart_legend');
 // console.log(test);
+
+
+// Time line 클릭 이벤트
+$(document).ready(timeLineEvent);
+
+function timeLineEvent() {
+    $("li.time").click(function () {
+
+        // switch the current period to the target period
+        var targetPeriod = $(this).attr("value");
+        // console.log(targetPeriod);
+
+        // network update
+        if(network_period == targetPeriod){
+            // do nothing
+            console.log("the period is same with current");
+        }else{
+
+            // change the position of the checked image according to the clicked element's position
+            var element_bounding = $(this).get(0).getBoundingClientRect();
+            var top = element_bounding.top;
+            var left = element_bounding.left;
+            var doc_width = window.innerWidth;
+            var doc_height = window.innerHeight;
+
+            top = top*100/doc_height - 5;
+            left = left*100/doc_width;
+
+            $("#checked").css({
+                'top': top + "vh",
+                'left': left + "vw",
+                // 'transition': '.5s ease-in-out'  // 브라우저 부담이 심해서 뺌.
+            });
+
+            // graph clear and renew the network
+            network_period = targetPeriod;
+            graphClear();
+            AjaxFileRead(pathName);
+        }
+
+    });
+
+}
+
 
 // ROOT(global) 버튼 클릭 이벤트.
 $(".root_network").click(function () {

@@ -291,8 +291,6 @@
 
             padding: 0;
 
-
-
         }
         li.time{
             float: left;
@@ -305,53 +303,28 @@
 
         }
 
-        #timePeriod {
-            position:absolute;
+
+        #checked {
+            position: absolute;
+            z-index: 10;
+            width: 3%;
+
+        }
+
+        .timeLineWrapper{
+            /*display:inline-block;*/
+            /*position:relative;*/
             bottom: 1.5vh;
             left: 38vw;
             width: 20vw;
-            display: block
+            height: 8vh;
 
         }
 
-        .radioGroup{
-            display: inline-block;
-            text-align: center;
-            width: 15%;
-        }
 
-        .radioGroup input{
-            width: 20px;
-            height: 20px;
-            position: relative;
-        }
 
-        .radioGroup input:after{
-            display: block;
-            content: " ";
-            position: absolute;
-            top: 0.5vh;
-            background: #fff;
-            height: 2px;
-            width: 100%;
-            right: -1.5vw;
-        }
-        .radioGroup:last-child input:after{
-            display: none;
-        }
 
-        .radioGroup label{
-            display: block;
-            color:white;
-        }
 
-        .timeline {
-            margin: 20px 0;
-            padding: 0;
-            /*list-style: none;*/
-            /*border-top: 1px solid #fff;*/
-            /*line-height: -0.1em;*/
-        }
     </style>
 
 </head>
@@ -434,47 +407,21 @@
 
 </div>
 
-<ul id="timeLine">
-    <li class="time" value="March 1" name="March 1"></li>
-    <li class="time" value="March 2" name="March 2"></li>
-    <li class="time" value="March 3" name="March 3"></li>
-    <li class="time" value="March 4" name="March 4"></li>
-    <li class="time" value="March 5" name="March 5"></li>
-    <li class="time" value="April 1" name="April 1"></li>
 
+<div class="timeLineWrapper">
 
-</ul>
+    <ul id="timeLine">
 
-<!--
-
-<div id="timePeriod" class="timeline">
-        <div class="radioGroup">
-            <input type="radio" name="radio" id="my_radio_button_id1" />
-            <label for="my_radio_button_id1">1</label>
-        </div>
-        <div class="radioGroup">
-            <input type="radio" name="radio" id="my_radio_button_id2" />
-            <label for="my_radio_button_id2">2</label>
-        </div>
-        <div class="radioGroup">
-            <input type="radio" name="radio" id="my_radio_button_id3" />
-            <label for="my_radio_button_id3">3</label>
-        </div>
-        <div class="radioGroup">
-            <input type="radio" name="radio" id="my_radio_button_id4" />
-            <label for="my_radio_button_id4">4</label>
-        </div>
-        <div class="radioGroup">
-            <input type="radio" name="radio" id="my_radio_button_id5" />
-            <label for="my_radio_button_id5">5</label>
-        </div>
-        <div class="radioGroup">
-            <input type="radio" name="radio" id="my_radio_button_id6" />
-            <label for="my_radio_button_id6">April 1</label>
-        </div>
-
+        <li class="time" value="20170318-20170324" name="March 4"></li>
+        <li class="time" value="20170325-20170331" name="March 5"></li>
+        <li class="time" value="20170401-20170407" name="April 1"></li>
+        <li class="time" value="20170408-20170414" name="April 2"></li>
+        <li class="time" value="20170415-20170421" name="April 3"></li>
+        <li class="time" value="20170422-20170428" name="April 4"></li>
+    </ul>
+    <img id="checked" src="img/checked.png">
 </div>
--->
+
 
 
 <!-- Modals -->
@@ -551,13 +498,24 @@
         }
     }
 
-    $("li.time").click(function () {
-        console.log($(this));
-        console.log($(this).attr("value"));
-        console.log($(this).attr("name"));
+    $(document).ready(function () {
+        console.log(document.getElementsByClassName("time")[0].getBoundingClientRect().top);
+        var init_time = document.getElementsByClassName("time")[0].getBoundingClientRect();
+        var top = init_time.top;
+        var left = init_time.left;
+        var doc_width = window.innerWidth;
+        var doc_height = window.innerHeight;
 
+        top = top*100/doc_height - 5;
+        left = left*100/doc_width;
+
+        $("#checked").css({
+            'top': top + "vh",
+            'left': left + "vw"
+        });
 
     })
+
 
 </script>
 
