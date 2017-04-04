@@ -7,7 +7,6 @@ var $ = require("jquery");
 var nGraph = require('ngraph.graph');
 var http = require('http');
 var d3 = require('d3');
-var THREE = require('three');
 var d3_chart = require('./../js/d3_chart.js');
 // load renderer
 var graphRenderer = require('./../js/index.js');
@@ -15,44 +14,26 @@ var graphRenderer = require('./../js/index.js');
 var createSettingsView = require('config.pixel');
 var addCurrentNodeSettings = require('../nodeSettings.js');
 
-
 // *********** declare global var ***********
 // create Graph, renderer var
 var graph, renderer;
 
-// variable for var chart
-// var chartDom;
-
 // gui view, renderer setting
 var settingsView, gui, nodeSettings, physicsSettings;
 var gui_open;
-
 var degreeThreshold_ToShowLabel;
 
+// variable for set root, target network
 var currentName, targetName, pathName;
 var targetType, rootType;
 var combination_network;
 
 // first time period
-var network_period = "20170318-20170324";
-
+var network_period = "0317-0323";
 // timer variable
 var timer;
-
-
-
-
-var community_map = {
-    "일베": "ilbe",
-    "디씨": "dc",
-    "오유": "ou",
-    "인벤": "inven",
-    "엠팍": "mp"
-};
-
-// declare empty color map for random color generator
-// var color_map = {};
-
+// timeline tooltip dom element
+var timeLineTooltipDom;
 // color palette
 var color_palette = {
     "0": 0x800000,
@@ -65,9 +46,24 @@ var color_palette = {
 }
 
 
+
+/*
+var community_map = {
+    "일베": "ilbe",
+    "디씨": "dc",
+    "오유": "ou",
+    "인벤": "inven",
+    "엠팍": "mp"
+};
+*/
+
+// declare empty color map for random color generator
+// var color_map = {};
+
+
+
+
 initNetwork();
-
-
 
 // init network
 function initNetwork(){
@@ -126,6 +122,9 @@ function initNetwork(){
 
     // init network eventHandler
     initEventHandler();
+
+    // create TimeLine Tooltip
+    createTimeLineTooltip();
 
 
     // d3 차트생성
@@ -244,19 +243,6 @@ function AjaxFileRead(pathName) {
                 renderer.stable(true);
             }, 5000);
 
-            /*
-            window.setTimeout(function () {
-
-                // fit the network with the screen automatically
-                renderer.autoFit();
-                // set the layout stable
-                renderer.stable(true);
-
-            }, 5000);
-*/
-
-
-
 
         });
     });
@@ -284,8 +270,15 @@ function initRandomColorMap(color_length) {
 // console.log(test);
 
 
-// Time line 클릭 이벤트
+// Time line 클릭 이벤트 set
 $(document).ready(timeLineEvent);
+
+function createTimeLineTooltip() {
+    timeLineTooltipDom = document.createElement('div');
+    timeLineTooltipDom.className = 'timeLine-tooltip';
+
+
+}
 
 function timeLineEvent() {
     $("li.time").click(function () {
@@ -308,7 +301,7 @@ function timeLineEvent() {
             var doc_height = window.innerHeight;
 
             top = top*100/doc_height - 5;
-            left = left*100/doc_width;
+            left = left*100/doc_width + 0.5;
 
             $("#checked").css({
                 'top': top + "vh",
@@ -321,8 +314,41 @@ function timeLineEvent() {
             graphClear();
             AjaxFileRead(pathName);
         }
-
     });
+
+    $("li.time").hover(function () {
+        // the target period assign to show tooltip
+        var tooltipText = $(this).attr("value");
+        var element_bounding = $(this).get(0).getBoundingClientRect();
+        var top = element_bounding.top;
+        var left = element_bounding.left + 30;
+
+        var doc_width = window.innerWidth;
+        var doc_height = window.innerHeight;
+        top = top*100/doc_height;
+        left = left*100/doc_width;
+
+        timeLineTooltipDom.innerHTML =
+            "crawled period: " + tooltipText;
+        // timeLineTooltipDom.style.left = left + 'px';
+        // timeLineTooltipDom.style.top = top + 'px';
+        timeLineTooltipDom.style.left = left + 'vw';
+        timeLineTooltipDom.style.top = top + 'vh';
+
+        timeLineTooltipDom.style.textAlign = 'left';
+        timeLineTooltipDom.style.width = 'fit-content';
+        timeLineTooltipDom.style.position = "absolute";
+        timeLineTooltipDom.style.background = 'rgba(50, 50, 50, 0.7)';
+        timeLineTooltipDom.style.zIndex = 50;
+
+        document.getElementById("container").appendChild(timeLineTooltipDom);
+        // $(this).get(0).appendChild(timeLineTooltipDom);
+
+    }, function () {
+        // if mouse leave, clean the innerHTML
+        timeLineTooltipDom.innerHTML = "";
+    });
+
 
 }
 
@@ -662,7 +688,7 @@ renderer.on('nodehover', function(node) {
 
 
 
-
+/*
 // graph file load function using local fileSystem synchronously ( not recommend)
 function filedRead() {
     var content = fs.readFileSync('./data/test2.json', 'utf8');
@@ -683,7 +709,7 @@ function filedRead() {
     });
     graph.endUpdate();
 }
-
+*/
 
 // 테스트 셋(from gephi)용 파일호출 함수
 // function AjaxFileRead(pathName) {

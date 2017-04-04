@@ -59,7 +59,6 @@
         #current_network{
 
             position: absolute;
-
             color: white; /* font color */
             /*background: #363636; !* 글자 안의 배경 *!*/
             /*border-radius: 16px; !* 글자 배경의 폭 *!*/
@@ -176,7 +175,7 @@
         .modal {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            z-index: 100; /* Sit on top */
             padding-top: 100px; /* Location of the box */
             left: 0;
             top: 4%;
@@ -255,6 +254,10 @@
             color: #ddd;
         }
 
+        section{
+            margin-bottom: 30px
+        }
+
         /* Responsive Text size */
         @media all and (max-width: 1200px) { /* screen size until 1200px */
             body {
@@ -278,17 +281,18 @@
         }
         /* ***************************** */
         #timeLine {
-            background: url("img/timeLine4.png") no-repeat;
+            background: url("img/timeLine5.png") no-repeat;
+            /*background: url("img/timeLine4.png") no-repeat;*/
             /*background: url("img/timeLine3.png") no-repeat;*/
             /*background: url("img/timeLine2.png") no-repeat;*/
             background-size: 90%;
             /*background-position: 20px -10px;*/
             background-position: center top;
             position:absolute;
-            bottom: 1.5vh;
-            left: 38vw;
-            width: 20vw;
-            height: 6.5vh;
+            bottom: 1.9vh;
+            left: 35vw;
+            width: 25vw;
+            height: 7.5vh;
             margin-bottom:0;
 
             padding: 0;
@@ -298,8 +302,8 @@
             float: left;
             display: block;
             color: white;
-            padding-top: 2vh;
-            width: 14.5%;
+            padding-top: 4vh;
+            width: 11.25%;
             /*padding-right: 2.8vw;*/
             text-align: center;
 
@@ -316,10 +320,10 @@
         .timeLineWrapper{
             /*display:inline-block;*/
             /*position:relative;*/
-            bottom: 1.5vh;
-            left: 38vw;
-            width: 20vw;
-            height: 8vh;
+            bottom: 1.9vh;
+            left: 35vw;
+            width: 25vw;
+            height: 9vh;
 
         }
 
@@ -413,13 +417,30 @@
 <div class="timeLineWrapper">
 
     <ul id="timeLine">
+<!--
 
-        <li class="time" value="20170318-20170324" name="March 4"></li>
-        <li class="time" value="20170325-20170331" name="March 5"></li>
-        <li class="time" value="20170401-20170407" name="April 1"></li>
-        <li class="time" value="20170408-20170414" name="April 2"></li>
-        <li class="time" value="20170415-20170421" name="April 3"></li>
-        <li class="time" value="20170422-20170428" name="April 4"></li>
+        <li class="time" value="20170317-20170323" name="March 4"></li>
+        <li class="time" value="20170324-20170330" name="March 5"></li>
+        <li class="time" value="20170331-20170406" name="April 1"></li>
+        <li class="time" value="20170407-20170413" name="April 2"></li>
+        <li class="time" value="20170414-20170420" name="April 3"></li>
+        <li class="time" value="20170421-20170427" name="April 4"></li>
+
+        <li class="time" value="20170428-20170504" name="May 1"></li>
+        <li class="time" value="20170505-20170511" name="May 2"></li>
+
+-->
+
+        <li class="time" value="0317-0323" name="March 4"></li>
+        <li class="time" value="0324-0330" name="March 5"></li>
+        <li class="time" value="0331-0406" name="April 1"></li>
+        <li class="time" value="0407-0413" name="April 2"></li>
+        <li class="time" value="0414-0420" name="April 3"></li>
+        <li class="time" value="0421-0427" name="April 4"></li>
+
+        <li class="time" value="0428-0504" name="May 1"></li>
+        <li class="time" value="0505-0511" name="May 2"></li>
+
     </ul>
     <img id="checked" src="img/checked.png">
 </div>
@@ -435,38 +456,55 @@
             <h3>About</h3>
         </div>
         <div class="modal-body">
+
             <section>
                 <h4>CommScope</h4>
-                <p> CommScope is an intertive visualization of the representation of public opinions from Korean Online Communities (KOC). </p>
-                <p> The main visualization method is a node-link diagram.
+                <p> CommScope is an intertive visualization of the representation of public opinions from Korean Online Communities (KOC).
+                    The main visualization method is a node-link diagram.
                 </p>
-                <p>Some other text ...</p>
             </section>
+
+
 
             <section>
                 <h4>How to use</h4>
+
                 <h5> - Basic Instructions</h5>
                 <p>As this network visualization is built in 3D, you can zoom in/out using your touchpad or mouse wheel. You can also rotate the network
                     by clicking and dragging the mouse.
                 </p>
+
+                <h5> - Network Switching</h5>
+                <p>You can change the network for each candidate, community, candidate and community in the left panel.
+                </p>
+<!--
+                <p>왼쪽 판넬에서 각 후보별, 커뮤니티별, 후보+커뮤니티별로 네트워크를 변경할 수 있습니다.
+                </p>
+-->
                 <h5> - Network Settings</h5>
                 <p>In this settings, you can modified the layout options of network. There may be some legs for working the network layout. If you see a network
                     which looks a tangled hair, you can resume the layout. Moreover, you can set your own network settings by setting the length of the links,
                     gravity, theta, drag coefficient, and time steps.
                 </p>
-
             </section>
+
+
 
             <section>
                 <h4>Development</h4>
-                <p>Powered by Three.js, ngraph, and built by browserify</p>
+                <p>Powered by Three.js, Tween.js, Bootstrap, jQuery, ngraph</p>
+            </section>
 
+
+
+            <section>
+                <h4>Feedback</h4>
+                <p>heungseok2 at gmail.com / kaist.ac.kr</p>
             </section>
 
         </div>
         <div class="modal-footer">
-            <!--<h5>Modal Footer</h5>-->
-            <p>Developed by Heungseok Park. &copy; 2017 All rights reserved. </p>
+            <p>Developed & Designed by Heungseok Park. &copy; 2017 All rights reserved. </p>
         </div>
     </div>
 
