@@ -7513,7 +7513,7 @@ var $ = require("jquery");
 var nGraph = require('ngraph.graph');
 var http = require('http');
 var d3 = require('d3');
-var elementClass = require('element-class');
+var THREE = require('three');
 var d3_chart = require('./../js/d3_chart.js');
 // load renderer
 var graphRenderer = require('./../js/index.js');
@@ -7527,7 +7527,7 @@ var addCurrentNodeSettings = require('../nodeSettings.js');
 var graph, renderer;
 
 // variable for var chart
-var chartDom;
+// var chartDom;
 
 // gui view, renderer setting
 var settingsView, gui, nodeSettings, physicsSettings;
@@ -7539,11 +7539,13 @@ var currentName, targetName, pathName;
 var targetType, rootType;
 var combination_network;
 
+// first time period
 var network_period = "20170318-20170324";
 
-var timeList = [];
+// timer variable
+var timer;
 
-// var pathName = "test.json";
+
 
 
 var community_map = {
@@ -7737,6 +7739,18 @@ function AjaxFileRead(pathName) {
             console.log("3. Finished graph construct");
 
             console.log("4. stop the layout after loading the data");
+
+            // if the timer is overlapped, clear the previous one.
+            clearTimeout(timer);
+
+            timer = setTimeout(function (){
+                // fit the network with the screen automatically
+                renderer.autoFit();
+                // set the layout stable to stop the layout
+                renderer.stable(true);
+            }, 5000);
+
+            /*
             window.setTimeout(function () {
 
                 // fit the network with the screen automatically
@@ -7745,7 +7759,7 @@ function AjaxFileRead(pathName) {
                 renderer.stable(true);
 
             }, 5000);
-
+*/
 
 
 
@@ -7805,7 +7819,7 @@ function timeLineEvent() {
             $("#checked").css({
                 'top': top + "vh",
                 'left': left + "vw",
-                'transition': '.5s ease-in-out'
+                // 'transition': '.5s ease-in-out'  // 브라우저 부담이 심해서 뺌.
             });
 
             // graph clear and renew the network
@@ -8306,7 +8320,7 @@ function filedRead() {
 //
 // }
 
-},{"../nodeSettings.js":51,"./../js/d3_chart.js":35,"./../js/index.js":37,"config.pixel":53,"d3":55,"element-class":56,"http":25,"jquery":80,"ngraph.graph":91}],37:[function(require,module,exports){
+},{"../nodeSettings.js":51,"./../js/d3_chart.js":35,"./../js/index.js":37,"config.pixel":53,"d3":55,"http":25,"jquery":80,"ngraph.graph":91,"three":125}],37:[function(require,module,exports){
 var THREE = require('three');
 var TrackballControls = require('three-trackballcontrols');
 var text2D = require('three-text2d');
