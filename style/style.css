@@ -327,10 +327,53 @@ img.pca-image {
     float: right;
     background-color: #ffffff;
 
-
 }
 
 .modal-content.pca{
     opacity: 1;
+}
+
+.dropdown{
+    position: absolute;
+    /*left: 90vw;*/
+    top: 5vh;
+    right: 30px;
+    z-index: 50;
+    padding: 2px;
+    margin: 2px;
+
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+
+
+}
+#neighborsBtn{
+    background-color: #333;
+    border-color: #333;
+
+}
+
+.dropdown-menu{
+    background-color: #333;
+    color: white;
+    height: auto;
+    max-height: 80vh;
+    overflow-x: hidden;
+    transition: all 0.3s;
+}
+
+#neighborsList>li>a{
+    padding-left: 10%;
+    padding-top: 5%;
+    background-color: #333;
+    color: grey;
+}
+
+#neighborsList>li>a:hover{
+    transition: all 0.3s;
+    color: white;
 }
 

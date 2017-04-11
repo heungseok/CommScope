@@ -91,6 +91,16 @@
 
     </div>
 
+    <div class="dropdown">
+        <button id="neighborsBtn" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            <span class="text"> Neighbors</span>
+            <span class="caret"></span>
+        </button>
+        <ul id="neighborsList" class="dropdown-menu">
+
+        </ul>
+    </div>
+
     <script src="./js/bundle.js"></script>
 
 </div>
@@ -387,8 +397,6 @@
     }
 
 
-
-
     $(document).ready(function () {
         console.log(document.getElementsByClassName("time")[0].getBoundingClientRect().top);
         var init_time = document.getElementsByClassName("time")[0].getBoundingClientRect();
@@ -406,6 +414,13 @@
         });
 
     })
+
+    $('.dropdown').on({
+        "shown.bs.dropdown": function() { this.closable = false; },
+//        "click":             function() { this.closable = true; },
+        "hide.bs.dropdown":  function() { return this.closable; }
+    });
+
 
 
 </script>

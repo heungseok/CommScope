@@ -8127,11 +8127,12 @@ function initEventHandler() {
     renderer.on('nodeclick', showNodeDetails);
     renderer.on('nodedblclick', function(node) {
         // renderer.showNode(node.id, 300);
-        renderer.showNodeTWEEN(node.id);
-        renderer.setSelectedNode(node);
-        // activeNeighbors(node);
-        console.log(node);
-        // console.log('Double clicked on ' + JSON.stringify(node));
+
+        // renderer.showNodeTWEEN(node.id);
+        // renderer.setSelectedNode(node);
+
+
+
     });
 
 }
@@ -8543,6 +8544,8 @@ function pixel(graph, options) {
 
   var TrackballController;
 
+  var neighbors = [];
+
 
   init();
   run();
@@ -8887,22 +8890,73 @@ function pixel(graph, options) {
     var node = getNodeByIndex(e.nodeIndex);
     console.log(node.data.label);
 
-    var node_label = node.data.label;
     var node_id = node.id;
 
-    var labelsToShow = [];
-    
+    // // open dropdownList
+    // $(".dropdown").addClass("open");
+
+    var dropdownDom = document.getElementById("neighborsList");
+
+
+    // clean children of dropdown list
+    while(dropdownDom.firstChild){
+      dropdownDom.removeChild(dropdownDom.firstChild);
+    }
+
+    // change the title of dropdown list as the active node
+    document.getElementById("neighborsBtn").firstChild.textContent = node.data.label;
+
     node.links.forEach(function (link) {
-        if(link.fromId != node_id){
-          labelsToShow.push(getNodeByIndex(link.fromId));
 
-        }else if(link.toId != node_id){
-          labelsToShow.push(getNodeByIndex(link.toId));
-        }
+      var node;
+
+      if(link.fromId != node_id){
+        node = getNodeByIndex(link.fromId);
+
+      }else if(link.toId != node_id){
+        node = getNodeByIndex(link.toId);
+      }
+      neighbors.push(node);
+
+      var labelDom = document.createElement("li");
+      var innerDom = document.createElement("a");
+      innerDom.setAttribute("class", "neighbor");
+      innerDom.textContent = node.data.label;
+      labelDom.appendChild(innerDom);
+      innerDom.setAttribute("href", "#");
+
+      dropdownDom.appendChild(labelDom);
+
+
     });
-    console.log(labelsToShow);
+    addNeighborsClickEvent();
+    addNeighborsHoverEvent();
+  }
 
+  function addNeighborsClickEvent(){
+    $(".neighbor").click(function () {
+        var label = $(this).text();
+        neighbors.forEach(function (node) {
+            if(node.data.label == label){
+                showNodeTWEEN(node.id);
+                return;
 
+            }
+        })
+    });
+
+  }
+
+  function addNeighborsHoverEvent(){
+        $(".neighbor").hover(function () {
+            var label = $(this).text();
+            neighbors.forEach(function (node) {
+                if(node.data.label == label){
+                    setSelectedNode(node);
+                    return;
+                }
+            })
+        });
 
   }
 
@@ -8985,7 +9039,6 @@ function pixel(graph, options) {
     console.log("hello")
 
       flyTo.flyTo_smooth(camera, getNode(nodeId).position);
-      // flyTo.flyTo_smooth(camera, layout.getNodePosition(nodeId));
 
   }
 
@@ -8998,41 +9051,41 @@ function pixel(graph, options) {
   }
 
 
-    function setSelectedNode(node) {
+  function setSelectedNode(node) {
 
-      if (selectedNode !== undefined){
-          // console.log("recover previous color from activated color");
-          originLinks.forEach(function (link) {
-              if(link.data.color){
-                  var tempLink = getLink(link.id);
-                  tempLink.fromColor = link.data.color;
-                  tempLink.toColor = 0x000000;
+    if (selectedNode !== undefined){
+        // console.log("recover previous color from activated color");
+        originLinks.forEach(function (link) {
+            if(link.data.color){
+                var tempLink = getLink(link.id);
+                tempLink.fromColor = link.data.color;
+                tempLink.toColor = 0x000000;
 
-              }else{
-                  var tempLink = getLink(link.id);
-                  tempLink.fromColor = link.data.fromColor;
-                  tempLink.toColor = link.data.toColor;
-              }
+            }else{
+                var tempLink = getLink(link.id);
+                tempLink.fromColor = link.data.fromColor;
+                tempLink.toColor = link.data.toColor;
+            }
 
-          });
-          originLinks = [];
-      }
+        });
+        originLinks = [];
+    }
 
-      selectedNode = node;
-      if (node !== undefined){
+    selectedNode = node;
+    if (node !== undefined){
 
-          node.links.forEach(function (link) {
-              var tempLink = getLink(link.id);
-              tempLink.fromColor = 0xFF0000;
-              tempLink.toColor = 0xFF0000;
+        node.links.forEach(function (link) {
+            var tempLink = getLink(link.id);
+            tempLink.fromColor = 0xFF0000;
+            tempLink.toColor = 0xFF0000;
 
-              // tempLink.fromColor = "#FFFF0000";
-              // tempLink.toColor = "#FFFF0000";
+            // tempLink.fromColor = "#FFFF0000";
+            // tempLink.toColor = "#FFFF0000";
 
-              originLinks.push(link);
+            originLinks.push(link);
 
-          });
-      }
+        });
+    }
   }
 
   function toScreenPosition(position) {

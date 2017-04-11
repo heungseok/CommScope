@@ -621,11 +621,12 @@ function initEventHandler() {
     renderer.on('nodeclick', showNodeDetails);
     renderer.on('nodedblclick', function(node) {
         // renderer.showNode(node.id, 300);
-        renderer.showNodeTWEEN(node.id);
-        renderer.setSelectedNode(node);
-        // activeNeighbors(node);
-        console.log(node);
-        // console.log('Double clicked on ' + JSON.stringify(node));
+
+        // renderer.showNodeTWEEN(node.id);
+        // renderer.setSelectedNode(node);
+
+
+
     });
 
 }
