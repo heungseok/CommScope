@@ -184,7 +184,6 @@ function pixel(graph, options) {
   var nodes, edges;
   var tooltipView = createTooltipView(container);
 
-
   var selectedNode;
   var originLinks = [];
 
@@ -296,8 +295,8 @@ function pixel(graph, options) {
     // 트랙볼컨트롤 업데이트.
     TrackballController.update();
 
-      // TWEEEN 업데이트
-      TWEEN.update();
+    // TWEEEN 업데이트
+    TWEEN.update();
 
 
     renderer.render(scene, camera);
@@ -459,11 +458,6 @@ function pixel(graph, options) {
     scene.add(sphere);
 */
 
-      // 텍스트 생성 테스트
-     /* var sprite = new text2D.SpriteText2D("박흥석", { align: text2D.textAlign.center,
-          font: '40px Arial', fillStyle: '#333' , antialias: true });
-      console.log(sprite);
-      scene.add(sprite);*/
 
     if (options.autoFit) autoFitController = createAutoFit(nodeView, camera);
 
@@ -483,7 +477,8 @@ function pixel(graph, options) {
     input = createInput(camera, graph, renderer.domElement);
     input.on('move', stopAutoFit);
     input.on('nodeover', setTooltip);
-    input.on('nodeclick', passthrough('nodeclick'));
+    input.on('nodeclick', showNeighbors);
+    // input.on('nodeclick', passthrough('nodeclick'));
     input.on('nodedblclick', passthrough('nodedblclick'));
 
 
@@ -514,10 +509,13 @@ function pixel(graph, options) {
     nodes.forEach(cb);
   }
 
+
+  // node hovering effect
   function setTooltip(e) {
     // console.log("e's position");
     // console.log(e);
     var node = getNodeByIndex(e.nodeIndex);
+
 
     // console.log("node's position switched by the user defined function");
     // console.log(toScreenPosition(getNode(node.id).position));
@@ -527,7 +525,33 @@ function pixel(graph, options) {
     } else {
       tooltipView.hide(e);
     }
+    // active neighborhood edges' color as red
+    setSelectedNode(node);
+
     api.fire('nodehover', node);
+
+  }
+
+  function showNeighbors(e){
+    var node = getNodeByIndex(e.nodeIndex);
+    console.log(node.data.label);
+
+    var node_label = node.data.label;
+    var node_id = node.id;
+
+    var labelsToShow = [];
+    
+    node.links.forEach(function (link) {
+        if(link.fromId != node_id){
+          labelsToShow.push(getNodeByIndex(link.fromId));
+
+        }else if(link.toId != node_id){
+          labelsToShow.push(getNodeByIndex(link.toId));
+        }
+    });
+    console.log(labelsToShow);
+
+
 
   }
 
@@ -622,10 +646,11 @@ function pixel(graph, options) {
 
   }
 
-  function setSelectedNode(node) {
+
+    function setSelectedNode(node) {
 
       if (selectedNode !== undefined){
-          console.log("recover previous color from activated color");
+          // console.log("recover previous color from activated color");
           originLinks.forEach(function (link) {
               if(link.data.color){
                   var tempLink = getLink(link.id);
@@ -649,6 +674,9 @@ function pixel(graph, options) {
               var tempLink = getLink(link.id);
               tempLink.fromColor = 0xFF0000;
               tempLink.toColor = 0xFF0000;
+
+              // tempLink.fromColor = "#FFFF0000";
+              // tempLink.toColor = "#FFFF0000";
 
               originLinks.push(link);
 

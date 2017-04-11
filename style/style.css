@@ -161,9 +161,9 @@ img.network_btn {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 100; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
+    padding-top: 6vh; /* Location of the box */
     left: 0;
-    top: 4%;
+    /*top: 4%;*/
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
@@ -181,6 +181,7 @@ img.network_btn {
     padding: 0;
     border: 1px solid transparent;
     width: 50%;
+    overflow: auto;
 
     background-color: #333; /* Black w/ opacfity */
     opacity: .9;
@@ -311,3 +312,25 @@ li.time{
     height: 9vh;
 
 }
+
+div.pca-wrapper{
+    /*display: flex;*/
+    /*align-items: center;*/
+    margin-bottom: 5vh;
+}
+
+
+img.pca-image {
+    top: 10vh;
+    width: 28vw;
+    height: 30vh;
+    float: right;
+    background-color: #ffffff;
+
+
+}
+
+.modal-content.pca{
+    opacity: 1;
+}
+
