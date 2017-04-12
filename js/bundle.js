@@ -8595,6 +8595,17 @@ function pixel(graph, options) {
 
       selectedNode = undefined;
       originLinks = [];
+      neighbors = [];
+
+      var dropdownDom = document.getElementById("neighborsList");
+      // clean children of dropdown list
+      while(dropdownDom.firstChild){
+          dropdownDom.removeChild(dropdownDom.firstChild);
+      }
+      // change the title of dropdown list as the active node
+      document.getElementById("neighborsBtn").firstChild.textContent = "";
+
+
 
   }
 
@@ -8887,16 +8898,26 @@ function pixel(graph, options) {
   }
 
   function showNeighbors(e){
-    var node = getNodeByIndex(e.nodeIndex);
-    console.log(node.data.label);
+    console.log(e);
+    var node;
+    if(e.nodeIndex){
+      node = getNodeByIndex(e.nodeIndex);
+    }else if(e.id){
+      node = e
+    }else{
+      return;
+    }
+    console.log(node);
+
+    if(node == undefined) return;
 
     var node_id = node.id;
 
-    // // open dropdownList
-    // $(".dropdown").addClass("open");
+    // open dropdownList
+    $('#neighborsBtn').click();
+
 
     var dropdownDom = document.getElementById("neighborsList");
-
 
     // clean children of dropdown list
     while(dropdownDom.firstChild){
@@ -8939,6 +8960,7 @@ function pixel(graph, options) {
         neighbors.forEach(function (node) {
             if(node.data.label == label){
                 showNodeTWEEN(node.id);
+                showNeighbors(node);
                 return;
 
             }
