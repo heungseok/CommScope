@@ -7674,7 +7674,7 @@ function AjaxFileRead(pathName) {
                         label: node.label,
                         color: Number(rgb2hex(node.color)),
                         size: Number(node.size)*0.1,
-                        activated: false
+                        module : node.color
                     });
                 }else if(node.attributes["Modularity Class"]){
                     var module = node.attributes["Modularity Class"];
@@ -7684,7 +7684,7 @@ function AjaxFileRead(pathName) {
                         label: node.label,
                         color: color_palette[module],
                         size: Number(node.size)*0.1,
-                        activated: false
+                        module: Number(module)
                     });
 
                     /* This is for the random color generator
@@ -7702,17 +7702,15 @@ function AjaxFileRead(pathName) {
 
                 if(edge.color){
                     graph.addLink(edge.source, edge.target, {
-                        color: rgb2hex(edge.color),
-                        activated: false
+                        color: rgb2hex(edge.color)
+
                     });
                 }else{
 
                     // This is for the color pallete
                     graph.addLink(edge.source, edge.target, {
                         fromColor: color_palette[edge.source_color],
-                        toColor: color_palette[edge.target_color],
-                        // color: rgb2hex("rgb(158,158,198)"),
-                        activated: false
+                        toColor: color_palette[edge.target_color]
                     });
 
                     /* This is for the random color generator
@@ -8082,23 +8080,25 @@ $("#gui_control").click(function (data) {
 
 ///
 function renderNode(node) {
+    /*
     if(node.data.activated) return{
         color: node.data.color,
         size: 10 + node.data.size * 0.5
     };
-
+    */
     return {
         color: node.data.color,
-        size: 10 + node.data.size * 0.3
+        size: 10 + node.data.size * 0.5
     };
 }
 
 function renderLink(link) {
+    /*
     if(link.data.activated) return{
         fromColor: 0xFF0000,
         toColor: 0xFF0000
     };
-
+    */
     return {
         fromColor: link.data.fromColor,
         toColor: link.data.toColor
@@ -8546,6 +8546,10 @@ function pixel(graph, options) {
 
   var neighbors = [];
 
+  var color_palette = ["#800000", "#800080", "#008000", "#000080", "#808000", "#804080", "#008080", "#808080", "#ff0dd0" ];
+
+
+
 
   init();
   run();
@@ -8898,7 +8902,7 @@ function pixel(graph, options) {
   }
 
   function showNeighbors(e){
-    console.log(e);
+
     var node;
     if(e.nodeIndex){
       node = getNodeByIndex(e.nodeIndex);
@@ -8907,51 +8911,75 @@ function pixel(graph, options) {
     }else{
       return;
     }
-    console.log(node);
+    // if(node == undefined) return;
 
-    if(node == undefined) return;
-
-    var node_id = node.id;
-
-    // open dropdownList
-    $('#neighborsBtn').click();
-
-
-    var dropdownDom = document.getElementById("neighborsList");
-
-    // clean children of dropdown list
-    while(dropdownDom.firstChild){
-      dropdownDom.removeChild(dropdownDom.firstChild);
-    }
+    // clean neighbors array
+    neighbors.length = 0;
 
     // change the title of dropdown list as the active node
     document.getElementById("neighborsBtn").firstChild.textContent = node.data.label;
 
+    var node_id = node.id;
+    // add neighbors node to the array
     node.links.forEach(function (link) {
 
       var node;
-
       if(link.fromId != node_id){
         node = getNodeByIndex(link.fromId);
-
       }else if(link.toId != node_id){
         node = getNodeByIndex(link.toId);
       }
       neighbors.push(node);
 
-      var labelDom = document.createElement("li");
-      var innerDom = document.createElement("a");
-      innerDom.setAttribute("class", "neighbor");
-      innerDom.textContent = node.data.label;
-      labelDom.appendChild(innerDom);
-      innerDom.setAttribute("href", "#");
-
-      dropdownDom.appendChild(labelDom);
-
-
     });
+
+    // sort neighbors by modularity index
+    neighbors.sort(function (a, b) {
+        return a.data.module - b.data.module;
+    });
+
+    addNeighborsToHTML();
     addNeighborsClickEvent();
     addNeighborsHoverEvent();
+  }
+
+  function addNeighborsToHTML(){
+
+    // open dropdownList
+    $('#neighborsBtn').click();
+
+    // get dropdownList's DOM
+    var dropdownDom = document.getElementById("neighborsList");
+
+    // clean children of dropdown list
+    while(dropdownDom.firstChild){
+        dropdownDom.removeChild(dropdownDom.firstChild);
+    }
+
+
+    // iterate neighbors to write HTML
+    neighbors.forEach(function (node) {
+
+        var labelDom = document.createElement("li");
+        var innerDom = document.createElement("a");
+        var boxDom = document.createElement("span");
+
+
+        // text dom
+        innerDom.setAttribute("class", "neighbor");
+        innerDom.setAttribute("href", "#");
+        innerDom.textContent = node.data.label;
+        labelDom.appendChild(innerDom);
+
+        // box dom (modularity)
+        boxDom.setAttribute("class", "box");
+        boxDom.style.backgroundColor = color_palette[node.data.module]; // set color
+        labelDom.appendChild(boxDom);
+
+        // append li element to dropdownList
+        dropdownDom.appendChild(labelDom);
+        
+    })
   }
 
   function addNeighborsClickEvent(){

@@ -130,7 +130,7 @@
     <div class="modal-content pca">
         <div class="modal-header">
             <span id="pca-close" class="close">&times;</span>
-            <h3>Analysis</h3>
+            <h3>PCA Analysis</h3>
         </div>
         <div class="modal-body">
 
@@ -151,14 +151,114 @@
             </section>
 
             <section>
-                <h4>PCA</h4>
+                <h4>PCA Results</h4>
 
                 <div class="pca-wrapper" style="text-align: center">
                     <span>
-                        - 0317-0323 (example) <br><br>
-                        <img class="pca-image" src="img/PCA/0317-0323.png" style="float:none">
-
+                        - 0317-0323 Total<br><br>
+                        <img class="pca-image" src="img/PCA/0317_total.png">
                     </span>
+                    <span>
+                        - 0317-0323 Ilbe <br><br>
+                        <img class="pca-image" src="img/PCA/0317_ilbe.png">
+                    </span>
+
+                    <span>
+                        - 0317-0323 DC Inside <br><br>
+                        <img class="pca-image" src="img/PCA/0317_dc.png">
+                    </span>
+
+                    <span>
+                        - 0317-0323 MLB park <br><br>
+                        <img class="pca-image" src="img/PCA/0317_mpark.png">
+                    </span>
+
+                    <span>
+                        - 0317-0323 Today's humor <br><br>
+                        <img class="pca-image" src="img/PCA/0317_todayhumor.png">
+                    </span>
+
+
+                    <span>
+                        - 0324-0330 Total<br><br>
+                        <img class="pca-image" src="img/PCA/0324_total.png">
+                    </span>
+                    <span>
+                        - 0324-0330 Ilbe <br><br>
+                        <img class="pca-image" src="img/PCA/0324_ilbe.png" >
+                    </span>
+
+                    <span>
+                        - 0324-0330 DC Inside <br><br>
+                        <img class="pca-image" src="img/PCA/0324_dc.png">
+                    </span>
+
+                    <span>
+                        - 0324-0330 MLB park <br><br>
+                        <img class="pca-image" src="img/PCA/0324_mpark.png">
+                    </span>
+
+                    <span>
+                        - 0324-0330 Today's humor <br><br>
+                        <img class="pca-image" src="img/PCA/0324_todayhumor.png">
+                    </span>
+
+
+                    <span>
+                        - 0331-0406 Total<br><br>
+                        <img class="pca-image" src="img/PCA/0331_total.png">
+                    </span>
+                    <span>
+                        - 0331-0406 Ilbe <br><br>
+                        <img class="pca-image" src="img/PCA/0331_ilbe.png">
+                    </span>
+
+                    <span>
+                        - 0331-0406 DC Inside <br><br>
+                        <img class="pca-image" src="img/PCA/0331_dc.png">
+                    </span>
+
+                    <span>
+                        - 0331-0406 MLB park <br><br>
+                        <img class="pca-image" src="img/PCA/0331_mpark.png">
+                    </span>
+
+                    <span>
+                        - 0331-0406 Today's humor <br><br>
+                        <img class="pca-image" src="img/PCA/0331_todayhumor.png">
+                    </span>
+
+
+                    <span>
+                        - 0407-0413 Total<br><br>
+                        <img class="pca-image" src="img/PCA/0407_total.png">
+                    </span>
+                    <span>
+                        - 0407-0413 Ilbe <br><br>
+                        <img class="pca-image" src="img/PCA/0407_ilbe.png">
+                    </span>
+
+                    <span>
+                        - 0407-0413 DC Inside <br><br>
+                        <img class="pca-image" src="img/PCA/0407_dc.png">
+                    </span>
+
+                    <span>
+                        - 0407-0413 MLB park <br><br>
+                        <img class="pca-image" src="img/PCA/0407_mpark.png">
+                    </span>
+
+                    <span>
+                        - 0407-0413 Today's humor <br><br>
+                        <img class="pca-image" src="img/PCA/0407_todayhumor.png">
+                    </span>
+
+
+
+
+
+
+
 
                 </div>
 
@@ -325,6 +425,10 @@
         "shown.bs.dropdown": function() { this.closable = false; },
         "hide.bs.dropdown":  function() { return this.closable; }
     });
+
+    $('#neighborsBtn').click(function () {
+        $('#neighborsBtn').dropdown('toggle');
+    })
 
 
 

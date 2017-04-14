@@ -168,7 +168,7 @@ function AjaxFileRead(pathName) {
                         label: node.label,
                         color: Number(rgb2hex(node.color)),
                         size: Number(node.size)*0.1,
-                        activated: false
+                        module : node.color
                     });
                 }else if(node.attributes["Modularity Class"]){
                     var module = node.attributes["Modularity Class"];
@@ -178,7 +178,7 @@ function AjaxFileRead(pathName) {
                         label: node.label,
                         color: color_palette[module],
                         size: Number(node.size)*0.1,
-                        activated: false
+                        module: Number(module)
                     });
 
                     /* This is for the random color generator
@@ -196,17 +196,15 @@ function AjaxFileRead(pathName) {
 
                 if(edge.color){
                     graph.addLink(edge.source, edge.target, {
-                        color: rgb2hex(edge.color),
-                        activated: false
+                        color: rgb2hex(edge.color)
+
                     });
                 }else{
 
                     // This is for the color pallete
                     graph.addLink(edge.source, edge.target, {
                         fromColor: color_palette[edge.source_color],
-                        toColor: color_palette[edge.target_color],
-                        // color: rgb2hex("rgb(158,158,198)"),
-                        activated: false
+                        toColor: color_palette[edge.target_color]
                     });
 
                     /* This is for the random color generator
@@ -576,23 +574,25 @@ $("#gui_control").click(function (data) {
 
 ///
 function renderNode(node) {
+    /*
     if(node.data.activated) return{
         color: node.data.color,
         size: 10 + node.data.size * 0.5
     };
-
+    */
     return {
         color: node.data.color,
-        size: 10 + node.data.size * 0.3
+        size: 10 + node.data.size * 0.5
     };
 }
 
 function renderLink(link) {
+    /*
     if(link.data.activated) return{
         fromColor: 0xFF0000,
         toColor: 0xFF0000
     };
-
+    */
     return {
         fromColor: link.data.fromColor,
         toColor: link.data.toColor

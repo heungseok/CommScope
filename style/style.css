@@ -244,33 +244,10 @@ section{
     margin-bottom: 30px
 }
 
-/* Responsive Text size */
-@media all and (max-width: 1200px) { /* screen size until 1200px */
-    body {
-        font-size: 1.5em; /* 1.5x default size */
-    }
-}
-@media all and (max-width: 1000px) { /* screen size until 1000px */
-    body {
-        font-size: 1.2em; /* 1.2x default size */
-    }
-}
-@media all and (max-width: 800px) { /* screen size until 800px */
-    body {
-        font-size: 1.0em; /* 1.2x default size */
-    }
-}
-@media all and (max-width: 500px) { /* screen size until 500px */
-    body {
-        font-size: 0.8em; /* 0.8x default size */
-    }
-}
+
 /* ***************************** */
 #timeLine {
-    background: url("../img/timeLine5.png") no-repeat;
-    /*background: url("img/timeLine4.png") no-repeat;*/
-    /*background: url("img/timeLine3.png") no-repeat;*/
-    /*background: url("img/timeLine2.png") no-repeat;*/
+    background: url("../img/timeLine4.png") no-repeat;
     background-size: 90%;
     /*background-position: 20px -10px;*/
     background-position: center top;
@@ -321,17 +298,20 @@ div.pca-wrapper{
 
 
 img.pca-image {
-    top: 10vh;
-    width: 28vw;
-    height: 30vh;
-    float: right;
+    width: 600px;
+    float: none;
     background-color: #ffffff;
+    display: block;
+    vertical-align: middle;
+    margin: auto;
+    margin-bottom: 50px;
 
 }
 
 .modal-content.pca{
     opacity: 1;
 }
+
 
 .dropdown{
     position: absolute;
@@ -366,14 +346,73 @@ img.pca-image {
 }
 
 #neighborsList>li>a{
-    padding-left: 10%;
+    /*padding-left: 10%;*/
     padding-top: 5%;
     background-color: #333;
     color: grey;
+    left: 10px;
+    margin-left:10px;
 }
 
 #neighborsList>li>a:hover{
     transition: all 0.3s;
     color: white;
+}
+
+#neighborsList>li>.box{
+    display: block;
+    width: 10px;
+    height: 10px;
+    margin: -20px 5px 0 0;
+    background: 0 0;
+    position: absolute;
+    left: 10px;
+}
+
+
+
+/* Responsive according to the screen size*/
+@media all and (max-width: 1200px) { /* screen size until 1200px */
+    body {
+        font-size: 1.5em; /* 1.5x default size */
+    }
+
+}
+@media all and (max-width: 1000px) { /* screen size until 1000px */
+    body {
+        font-size: 1.2em; /* 1.2x default size */
+    }
+}
+@media all and (max-width: 800px) { /* screen size until 800px */
+    body {
+        font-size: 1.0em; /* 1.2x default size */
+    }
+    .modal-content.pca{
+        width: 90%;
+    }
+
+}
+
+@media all and (max-width: 700px) { /* screen size until 500px */
+    .dropdown{
+        display: none; /* 화면가로크기가 500px이하인 경우 dropdown invisible */
+    }
+    .modal-content.pca{
+        width: 90%;
+    }
+
+}
+
+@media all and (max-width: 500px) { /* screen size until 500px */
+    body {
+        font-size: 0.8em; /* 0.8x default size */
+    }
+    img.pca-image {
+        width: 100%;
+    }
+    .modal-content.pca{
+        width: 90%;
+    }
+
 }
 
