@@ -247,7 +247,7 @@ section{
 
 /* ***************************** */
 #timeLine {
-    background: url("../img/timeLine4.png") no-repeat;
+    background: url("../img/timeLine6.png") no-repeat;
     background-size: 90%;
     /*background-position: 20px -10px;*/
     background-position: center top;
@@ -372,15 +372,44 @@ img.pca-image {
 
 
 /* Responsive according to the screen size*/
+@media all and (max-width: 1500px) { /* screen size until 1200px */
+    body {
+        font-size: 1.7em; /* 1.5x default size */
+    }
+    .modal-content.pca{
+        width: 60%;
+    }
+
+    .dropdown{
+        top: 10vh;
+    }
+
+}
+
 @media all and (max-width: 1200px) { /* screen size until 1200px */
     body {
         font-size: 1.5em; /* 1.5x default size */
+    }
+    .modal-content.pca{
+        width: 70%;
+    }
+
+    .dropdown{
+        top: 10vh;
     }
 
 }
 @media all and (max-width: 1000px) { /* screen size until 1000px */
     body {
         font-size: 1.2em; /* 1.2x default size */
+    }
+
+    .modal-content.pca{
+        width: 80%;
+    }
+
+    .dropdown {
+        top: 10vh;
     }
 }
 @media all and (max-width: 800px) { /* screen size until 800px */
@@ -390,7 +419,9 @@ img.pca-image {
     .modal-content.pca{
         width: 90%;
     }
-
+    .dropdown {
+        top: 10vh;
+    }
 }
 
 @media all and (max-width: 700px) { /* screen size until 500px */
