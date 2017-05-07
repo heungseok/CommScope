@@ -2,38 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be77b431-2a26-4b98-be18-b9710f02a7ff" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/PCA/0421_dc.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/PCA/0421_ilbe.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/PCA/0421_mp.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/PCA/0421_todayhumor.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/img/PCA/0421_total.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/AhnCheolSoo+dc_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/AhnCheolSoo+ilbe_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/AhnCheolSoo+mp_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/AhnCheolSoo+ou_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/AhnCheolSoo_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/HongJoonPyo+dc_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/HongJoonPyo+ilbe_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/HongJoonPyo+mp_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/HongJoonPyo+ou_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/HongJoonPyo_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/MoonJaeIn+dc_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/MoonJaeIn+ilbe_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/MoonJaeIn+mp_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/MoonJaeIn+ou_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/MoonJaeIn_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/YooSeungMin+dc_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/YooSeungMin+ilbe_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/YooSeungMin+mp_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/YooSeungMin+ou_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/YooSeungMin_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/dc_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/global_candidate_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/global_community_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/ilbe_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/mp_network.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/0421-0427/ou_network.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo+dc_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo+dc_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo+ilbe_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo+ilbe_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo+mp_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo+mp_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo+ou_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo+ou_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/AhnCheolSoo_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo+dc_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo+dc_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo+ilbe_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo+ilbe_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo+mp_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo+mp_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo+ou_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo+ou_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/HongJoonPyo_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn+dc_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn+dc_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn+ilbe_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn+ilbe_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn+mp_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn+mp_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn+ou_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn+ou_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/MoonJaeIn_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/YooSeungMin+dc_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/YooSeungMin+dc_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/YooSeungMin+ilbe_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/YooSeungMin+ilbe_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/YooSeungMin+mp_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/YooSeungMin+mp_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/YooSeungMin+ou_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/YooSeungMin+ou_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/YooSeungMin_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/YooSeungMin_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/dc_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/dc_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/global_candidate_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/global_candidate_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/global_community_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/global_community_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/ilbe_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/ilbe_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/mp_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/mp_network.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/0428-0504/ou_network.json" afterPath="$PROJECT_DIR$/data/0428-0504/ou_network.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.html" afterPath="$PROJECT_DIR$/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/style/style.css" afterPath="$PROJECT_DIR$/style/style.css" />
     </list>
@@ -56,19 +51,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="577">
-              <caret line="277" column="69" lean-forward="false" selection-start-line="277" selection-start-column="69" selection-end-line="277" selection-end-column="69" />
+            <state relative-caret-position="853">
+              <caret line="316" column="42" lean-forward="false" selection-start-line="316" selection-start-column="42" selection-end-line="316" selection-end-column="42" />
               <folding>
                 <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="n#style#0;n#span#0;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
                 <element signature="e#4890#4897#0" expanded="true" />
                 <element signature="n#style#0;n#div#0;n#section#1;n#div#1;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="e#11359#11366#0" expanded="true" />
-                <element signature="e#14442#14448#0" expanded="true" />
+                <element signature="e#12290#12297#0" expanded="true" />
+                <element signature="e#15373#15379#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -97,17 +92,10 @@
       <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/style/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="434">
-              <caret line="249" column="33" lean-forward="false" selection-start-line="249" selection-start-column="33" selection-end-line="249" selection-end-column="33" />
+            <state relative-caret-position="457">
+              <caret line="250" column="25" lean-forward="true" selection-start-line="250" selection-start-column="25" selection-end-line="250" selection-end-column="25" />
               <folding />
             </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="timeLine6.png" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/img/timeLine6.png">
-          <provider selected="true" editor-type-id="images">
-            <state />
           </provider>
         </entry>
       </file>
@@ -182,8 +170,8 @@
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/js/graph_construction.js" />
         <option value="$PROJECT_DIR$/js/index.js" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/style/style.css" />
+        <option value="$PROJECT_DIR$/index.html" />
       </list>
     </option>
   </component>
@@ -199,10 +187,10 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="202" />
-    <option name="y" value="155" />
-    <option name="width" value="1452" />
-    <option name="height" value="1360" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="2576" />
+    <option name="height" value="1416" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -220,7 +208,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -271,26 +258,13 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="img" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="community_vis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="community_vis" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -402,17 +376,19 @@
       <workItem from="1492337401709" duration="588000" />
       <workItem from="1492741557197" duration="2637000" />
       <workItem from="1493380232047" duration="959000" />
+      <workItem from="1493650635581" duration="1284000" />
+      <workItem from="1494161758008" duration="837000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="156041000" />
+    <option name="totallyTimeSpent" value="158162000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="202" y="155" width="1452" height="1360" extended-state="0" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="2576" height="1416" extended-state="7" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22771588" sideWeight="0.49666983" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12773438" sideWeight="0.49666983" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -424,7 +400,7 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2273819" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22681992" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -490,8 +466,8 @@
             <element signature="n#style#0;n#span#0;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="e#4890#4897#0" expanded="true" />
             <element signature="n#style#0;n#div#0;n#section#1;n#div#1;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#11359#11366#0" expanded="true" />
-            <element signature="e#14442#14448#0" expanded="true" />
+            <element signature="e#12290#12297#0" expanded="true" />
+            <element signature="e#15373#15379#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -544,8 +520,8 @@
             <element signature="n#style#0;n#span#0;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="e#4890#4897#0" expanded="true" />
             <element signature="n#style#0;n#div#0;n#section#1;n#div#1;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#11359#11366#0" expanded="true" />
-            <element signature="e#14442#14448#0" expanded="true" />
+            <element signature="e#12290#12297#0" expanded="true" />
+            <element signature="e#15373#15379#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -792,37 +768,36 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="577">
-          <caret line="277" column="69" lean-forward="false" selection-start-line="277" selection-start-column="69" selection-end-line="277" selection-end-column="69" />
-          <folding>
-            <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#span#0;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#4890#4897#0" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#section#1;n#div#1;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="e#11359#11366#0" expanded="true" />
-            <element signature="e#14442#14448#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/style/style.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="434">
-          <caret line="249" column="33" lean-forward="false" selection-start-line="249" selection-start-column="33" selection-end-line="249" selection-end-column="33" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/img/timeLine6.png">
       <provider selected="true" editor-type-id="images">
         <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/style/style.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="457">
+          <caret line="250" column="25" lean-forward="true" selection-start-line="250" selection-start-column="25" selection-end-line="250" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="853">
+          <caret line="316" column="42" lean-forward="false" selection-start-line="316" selection-start-column="42" selection-end-line="316" selection-end-column="42" />
+          <folding>
+            <element signature="n#style#0;n#span#0;n#div#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#div#0;n#div#1;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#4890#4897#0" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#section#1;n#div#1;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="e#12290#12297#0" expanded="true" />
+            <element signature="e#15373#15379#0" expanded="true" />
+          </folding>
+        </state>
       </provider>
     </entry>
   </component>
