@@ -111,14 +111,6 @@ function createD3chart(container_name) {
 
 
 
-
-
-
-
-
-
-
-
     function initD3() {
 
         // Adds the svg canvas
