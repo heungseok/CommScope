@@ -1,6 +1,7 @@
 
 
 - 파일시스템 모듈이 포함된 js파일 browserify로 빌드
+browserify -t brfs js/graph_construction.js > js/bundle.js 
 browserify -t brfs js/ngraph_test.js > js/bundle.js 
 
 

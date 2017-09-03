@@ -77,8 +77,12 @@ function initNetwork(){
     rootType = "candidate";
 
     $("#current_network").html("Global network - root as candidate");
+    $("li.root_net."+rootType).addClass("active");
     // 반대 type의 버튼 클릭 금지.
     $('img.network_btn[type="community"]').css('pointer-events', 'none');
+    $('li.sub_net[type="community"]').addClass("disabled");
+
+    $("li.time_item[value="+network_period+"]").addClass("active");
 
     // create Graph var
     graph = nGraph();
@@ -350,6 +354,27 @@ function timeLineEvent() {
     });
 
 
+    $("li.time_item").click(function () {
+
+        // switch the current period to the target period
+        var targetPeriod = $(this).attr("value");
+        // console.log(targetPeriod);
+
+        // network update
+        if(network_period == targetPeriod){
+            // do nothing
+            console.log("the period is same with current");
+        }else{
+            // graph clear and renew the network
+            $(this).addClass("active");
+            $("li.time_item[value="+network_period+"]").removeClass("active");
+            network_period = targetPeriod;
+            graphClear();
+            AjaxFileRead(pathName);
+        }
+    });
+
+
 }
 
 
@@ -357,6 +382,7 @@ function timeLineEvent() {
 $(".root_network").click(function () {
 
     var targetRoot = $(this).attr("type");
+    console.log(targetRoot);
 
     // 현재 root와 targetRoot와 다를 경우, Root switching
     if(rootType != targetRoot){
@@ -432,7 +458,7 @@ $(".network_btn").click(function () {
     if(rootType != targetType){
         twosteps_network(currentName, targetName);
 
-    // 현재 타입과 동일할 경우(ex 후보자->후보자, 커뮤니티->커뮤니티)
+        // 현재 타입과 동일할 경우(ex 후보자->후보자, 커뮤니티->커뮤니티)
     }else if(currentName){
 
         if(targetName != currentName){
@@ -449,6 +475,187 @@ $(".network_btn").click(function () {
             $('img.network_btn[type='+rootType+']').css('filter', 'grayscale(100%)');
             // target 에 대한 이미지 active
             $('img[name='+targetName+']').css('filter', 'grayscale(0)');
+
+
+            graphClear();
+
+            // load other network
+            currentName = targetName;
+            pathName = currentName + "_network.json";
+            $("#current_network").html(currentName);
+            AjaxFileRead(pathName);
+
+            // combination 초기화
+            combination_network = "";
+
+            // 후보자==후보자, or 커뮤니티==커뮤니티
+        }else {
+            console.log("current network is same with the target")
+
+            // 만약 combination이 존재할 경우, 단일 네트워크로 돌아감.
+            if(combination_network){
+                graphClear();
+                // load other network
+                currentName = targetName;
+                pathName = currentName + "_network.json";
+                $("#current_network").html(currentName);
+                AjaxFileRead(pathName);
+
+
+                // 조합 중 현재 타입과 반대되는 타입 이미지 활성화.
+                // 후보자->후보자 혹은 후보자+커뮤니티->후보자 인경우 커뮤니티 버튼 색 활성화, and vice versa
+                if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(0)');
+                else                            $('img.network_btn[type="candidate"]').css('filter', 'grayscale(0)');
+
+                // combination 초기화
+                combination_network = "";
+
+            }
+        }
+
+
+        // rootType 클릭으로 current name이 초기화 된 상태에서 클릭되었을 경우.
+    }else{
+
+        currentName = $(this).attr("name");
+
+        // target을 제외한 이미지 inactive
+        $('img.network_btn[type='+rootType+']').css('filter', 'grayscale(100%)');
+        // target 에 대한 이미지 active
+        $('img[name='+currentName+']').css('filter', 'grayscale(0)')
+
+        // 반대 type 이미지 active
+        if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(0)');
+        else                            $('img.network_btn[type="candidate"]').css('filter', 'grayscale(0)');
+
+        graphClear();
+        // load other network
+        pathName = currentName + "_network.json";
+        $("#current_network").html(currentName);
+        AjaxFileRead(pathName);
+
+        // combination 초기화
+        combination_network = "";
+
+    }
+
+
+});
+
+
+
+// ************** ROOT(global) DropDown button 클릭 이벤트 ************* //
+$("li.root_net").click(function () {
+
+    var targetRoot = $(this).attr("type");
+    console.log(targetRoot);
+
+
+    // 현재 root와 targetRoot와 다를 경우, Root switching
+    if(rootType != targetRoot){
+        $("li.root_net."+rootType).removeClass("active");
+        $("li.root_net."+targetRoot).addClass("active");
+        // $('li.sub_net[type='+ rootType + ']').addClass("disabled");
+        $('li.sub_net').removeClass("active");
+        // $('li.sub_net[type='+ targetType + ']').removeClass("disabled");
+
+
+        $('.' + rootType + '_container').css({
+            'border-style': 'solid',
+            'border-color': 'black',
+            'transition': '.8s ease-in-out'
+        });
+
+        $('.' + targetRoot + '_container').css({
+            'border-style': 'solid',
+            'border-color': 'grey',
+            'transition': '.8s ease-in-out'
+        });
+
+        console.log( "switch the root from " + rootType + " to " + targetRoot);
+
+        // set path name as new global network
+        pathName = "global_" + targetRoot +"_network.json";
+        // set targetRoot as rootType
+        rootType = targetRoot;
+
+        // 현재 root와 targetRoot가 같을 경우, Root reload
+    }else{
+
+        console.log("Root is same as: " + rootType + ", and clean the current network(후보, 후보+커뮤니티) and switch network as rootType");
+
+        // set path name as new global network(rootType network reload)
+        pathName = "global_" + rootType +"_network.json";
+
+    }
+
+    // 반대 type의 버튼 클릭 금지 및 현재 type 버튼 클릭 활성화
+    if(rootType=="candidate"){
+        $('img.network_btn[type="community"]').css('pointer-events', 'none');
+        $('img.network_btn[type="candidate"]').css('pointer-events', 'auto');
+        $('li.sub_net[type="community"]').addClass("disabled");
+        $('li.sub_net[type="candidate"]').removeClass("disabled");
+    }else{
+        $('img.network_btn[type="candidate"]').css('pointer-events', 'none');
+        $('img.network_btn[type="community"]').css('pointer-events', 'auto');
+        $('li.sub_net[type="candidate"]').addClass("disabled");
+        $('li.sub_net[type="community"]').removeClass("disabled");
+    }
+
+    // set the other buttons and current rootType inactive, and clear current name and combination
+    $('.network_btn').css('filter', 'grayscale(0)');
+    $('.network_btn:hover').css('filter', 'grayscale(0)');
+
+
+    // combination, currentName 초기화
+    currentName = "";
+    combination_network = "";
+
+    graphClear();
+    $("#current_network").html("Global network - root as " + rootType);
+    AjaxFileRead(pathName);
+});
+
+// 후보자, 커뮤니티 버튼 클릭 이벤트.
+$("li.sub_net").click(function () {
+
+    // 모든 버튼 활성화
+    $('img.network_btn').css('pointer-events', 'auto');
+    $('li.sub_net').removeClass("disabled");
+
+
+    // 클릭한 버튼의 타입(후보자, 커뮤니티)
+    targetType = $(this).attr("type");
+    // 클릭한 버튼의 name
+    targetName = $(this).attr("value");
+
+
+    // 현재 타입과 다를 경우 조합 네트워크 호출(ex 후보자->커뮤니티, 커뮤니티->후보자)
+    if(rootType != targetType){
+        twosteps_network(currentName, targetName);
+
+    // 현재 타입과 동일할 경우(ex 후보자->후보자, 커뮤니티->커뮤니티)
+    }else if(currentName){
+
+        if(targetName != currentName){
+
+            console.log("Switch Network! {current network: "+ currentName +
+                ", target network: " + targetName);
+
+            // 후보자->후보자 혹은 후보자+커뮤니티->후보자 인경우 커뮤니티 버튼 색 활성화, and vice versa
+            if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(0)');
+            else                            $('img.network_btn[type="candidate"]').css('filter', 'grayscale(0)');
+            if(rootType == "candidate")     $('li.sub_net[type="community"]').removeClass("active");
+            else                            $('li.sub_net[type="candidate"]').removeClass("active");
+
+
+            // target을 제외한 이미지 inactive
+            $('img.network_btn[type='+rootType+']').css('filter', 'grayscale(100%)');
+            // target 에 대한 이미지 active
+            $('img[name='+targetName+']').css('filter', 'grayscale(0)');
+            $(this).addClass("active");
+            $('li.sub_net[value='+currentName+']').removeClass("active");
+
 
 
             graphClear();
@@ -480,6 +687,8 @@ $(".network_btn").click(function () {
                 // 후보자->후보자 혹은 후보자+커뮤니티->후보자 인경우 커뮤니티 버튼 색 활성화, and vice versa
                 if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(0)');
                 else                            $('img.network_btn[type="candidate"]').css('filter', 'grayscale(0)');
+                if(rootType == "candidate")     $('li.sub_net[type="community"]').removeClass("active");
+                else                            $('li.sub_net[type="candidate"]').removeClass("active");
 
                 // combination 초기화
                 combination_network = "";
@@ -491,12 +700,13 @@ $(".network_btn").click(function () {
     // rootType 클릭으로 current name이 초기화 된 상태에서 클릭되었을 경우.
     }else{
 
-        currentName = $(this).attr("name");
+        currentName = $(this).attr("value");
 
         // target을 제외한 이미지 inactive
         $('img.network_btn[type='+rootType+']').css('filter', 'grayscale(100%)');
         // target 에 대한 이미지 active
-        $('img[name='+currentName+']').css('filter', 'grayscale(0)')
+        $('img[name='+currentName+']').css('filter', 'grayscale(0)');
+        $(this).addClass("active");
 
         // 반대 type 이미지 active
         if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(0)');
@@ -529,9 +739,12 @@ function twosteps_network(current, target){
     // 반대 타입 이미지 active=> inactive
     if(rootType == "candidate")     $('img.network_btn[type="community"]').css('filter', 'grayscale(100%)');
     else                            $('img.network_btn[type="candidate"]').css('filter', 'grayscale(100%)');
+    if(rootType == "candidate")     $('li.sub_net[type="community"]').removeClass("active");
+    else                            $('li.sub_net[type="candidate"]').removeClass("active");
 
     // combination 타겟 활성화
     $('img[name='+target+']').css('filter', 'grayscale(0)');
+    $('li.sub_net[value='+ target + ']').addClass("active");
 
 
     combination_network = target_combi;

@@ -31,14 +31,14 @@
 
 <body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-inverse navbar-fixed-top" style="position: absolute; left:0; top:0">
     <div class="container-fluid">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#rightNavbar">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+            <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#rightNavbar">-->
+                <!--<span class="icon-bar"></span>-->
+                <!--<span class="icon-bar"></span>-->
+                <!--<span class="icon-bar"></span>-->
+            <!--</button>-->
             <a class="pull-left img-responsive" href="#"><img class="logo" src="img/logo.png"></a>
             <!--<a class="navbar-brand" href="#">CommScope <small>- An Interactive visualization of public opinions from Korean online communities</small></a>-->
             <a class="navbar-brand" href="#">CommScope</a>
@@ -48,8 +48,60 @@
 
         </div>
 
-        <div class="collapse navbar-collapse" id="rightNavbar">
-            <ul class="nav navbar-nav navbar-right">
+        <div id="navbar" class="navbar-collapse collapse">
+
+            <ul class="nav navbar-nav navbar-left">
+                <li class="side dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Root Network
+                        <span class="caret"></span></a>
+                    <ul class="root_net dropdown-menu">
+                        <li class="root_net candidate" type="candidate"><a href="#">Candidates</a></li>
+                        <li class="root_net community" type="community"><a href="#">Communities</a></li>
+
+                    </ul>
+                </li>
+
+                <li class="side dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Sub Network
+                        <span class="caret"></span></a>
+                    <ul class="sub_network dropdown-menu">
+                        <li class="dropdown-header"> Candidates </li>
+
+                        <li class="sub_net" type="candidate" value="MoonJaeIn"><a href="#"> MoonJaeIn </a></li>
+                        <li class="sub_net" type="candidate" value="AhnCheolSoo"><a href="#"> AhnCheolSoo </a></li>
+                        <li class="sub_net" type="candidate" value="YooSeungMin"><a href="#"> YooSeungMin </a></li>
+                        <li class="sub_net" type="candidate" value="HongJoonPyo"><a href="#"> HongJoonPyo </a></li>
+                        <!--<li><a href="#"><input class="cb_network edges" type="checkbox" onchange="control_network_component(this)" value="edges"/> Edges </a></li>-->
+                        <li class="dropdown-header"> Communities </li>
+
+                        <li class="sub_net" type="community" value="ilbe"><a href="#"> 일베 </a></li>
+                        <li class="sub_net" type="community" value="dc"><a href="#"> 디씨 </a></li>
+                        <li class="sub_net" type="community" value="mp"><a href="#"> 엠팍 </a></li>
+                        <li class="sub_net" type="community" value="ou"><a href="#"> 오유 </a></li>
+
+                    </ul>
+                </li>
+
+                <li class="side dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"> Crawled Period (by week)
+                        <span class="caret"></span></a>
+                    <ul class="timeLine dropdown-menu">
+
+                        <li class="time_item" value="0317-0323"><a href="#"> March 4th (17.3.17~3.23) </a></li>
+                        <li class="time_item" value="0324-0330"><a href="#"> March 5th (17.3.24~3.30) </a></li>
+                        <li class="time_item" value="0331-0406"><a href="#"> April 1st (17.3.31~4.6) </a></li>
+                        <li class="time_item" value="0407-0413"><a href="#"> April 2nd (17.4.7~4.13) </a></li>
+                        <li class="time_item" value="0414-0420"><a href="#"> April 3rd (17.4.14~4.20) </a></li>
+                        <li class="time_item" value="0421-0427"><a href="#"> April 4th (17.4.21~4.27) </a></li>
+                        <li class="time_item" value="0428-0504"><a href="#"> May 1st (17.4.28~5.4) </a></li>
+
+
+                    </ul>
+                </li>
+
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right" id="rightNavbar">
                 <li id="about" class="active"><a href="#">About</a></li>
                 <li id="PCA" class="active"><a href="#">PCA</a></li>
                 <li id="gui_control" class="active"><a href="#">Network Setting</a></li>
@@ -57,6 +109,8 @@
             </ul>
 
         </div>
+
+
 
     </div>
 
@@ -70,7 +124,7 @@
 
         </h3>
 
-        <div id="candidates_images">
+        <div id="candidates_images" style="display:none">
             <div class = "root_wrapper">
 
                 <img class="root_network" type="candidate" src="./img/Button_globe.png" name="Global_candidate"><span style="display:block; margin-left: auto;
@@ -88,7 +142,7 @@
 
         </div>
 
-        <div id="communities_images">
+        <div id="communities_images" style="display:none">
             <div class = "root_wrapper">
 
                 <img class="root_network" type="community" src="./img/Button_globe.png" name="Global_community"><span style="display:block; margin-left: auto;
@@ -107,12 +161,12 @@
 
     </div>
 
-    <div class="dropdown">
+    <div class="neighbors dropdown">
         <button id="neighborsBtn" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
             <span class="text"> Neighbors</span>
             <span class="caret"></span>
         </button>
-        <ul id="neighborsList" class="dropdown-menu">
+        <ul id="neighborsList" class="neighbors dropdown-menu">
 
         </ul>
     </div>
@@ -122,7 +176,7 @@
 </div>
 
 
-<div class="timeLineWrapper">
+<div class="timeLineWrapper"  style="display:none">
 
     <ul id="timeLine">
 
@@ -504,7 +558,7 @@
     })
 
 
-    $('.dropdown').on({
+    $('neighbors.dropdown').on({
         "shown.bs.dropdown": function() { this.closable = false; },
         "hide.bs.dropdown":  function() { return this.closable; }
     });

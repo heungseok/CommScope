@@ -15,6 +15,13 @@ body{
 }
 
 
+/* left nav bar menu */
+ul.dropdown-menu{
+    width: 100%;
+}
+
+
+
 /* css for d3 */
 path {
     stroke: steelblue;
@@ -313,7 +320,7 @@ img.pca-image {
 }
 
 
-.dropdown{
+.neighbors.dropdown{
     position: absolute;
     /*left: 90vw;*/
     top: 5vh;
@@ -336,7 +343,7 @@ img.pca-image {
 
 }
 
-.dropdown-menu{
+.neighbors.dropdown-menu{
     background-color: #333;
     color: white;
     height: auto;
@@ -380,7 +387,7 @@ img.pca-image {
         width: 60%;
     }
 
-    .dropdown{
+    neighbors.dropdown{
         top: 10vh;
     }
 
@@ -394,7 +401,7 @@ img.pca-image {
         width: 70%;
     }
 
-    .dropdown{
+    neighbors.dropdown{
         top: 10vh;
     }
 
@@ -408,7 +415,7 @@ img.pca-image {
         width: 80%;
     }
 
-    .dropdown {
+    neighbors.dropdown {
         top: 10vh;
     }
 }
@@ -419,13 +426,13 @@ img.pca-image {
     .modal-content.pca{
         width: 90%;
     }
-    .dropdown {
+    neighbors.dropdown {
         top: 10vh;
     }
 }
 
 @media all and (max-width: 700px) { /* screen size until 500px */
-    .dropdown{
+    neighbors.dropdown{
         display: none; /* 화면가로크기가 500px이하인 경우 dropdown invisible */
     }
     .modal-content.pca{
