@@ -558,13 +558,22 @@
     })
 
 
-    $('neighbors.dropdown').on({
-        "shown.bs.dropdown": function() { this.closable = false; },
-        "hide.bs.dropdown":  function() { return this.closable; }
-    });
+//    $('neighbors.dropdown').on({
+//
+//        "shown.bs.dropdown": function() { this.closable = true; },
+//        "hide.bs.dropdown":  function() { return this.closable; }
+//    });
 
     $('#neighborsBtn').click(function () {
-        $('#neighborsBtn').dropdown('toggle');
+//        $('#neighborsBtn').dropdown('toggle');
+        var neighborsList = $('#neighborsList');
+
+        if(neighborsList.css("display") == "block") neighborsList.css("display", "none");
+        else neighborsList.css("display", "block");
+//
+//        console.log($('#neighborsList').css("display"));
+//        $('#neighborsList').css("display", "block");
+
     })
 
 

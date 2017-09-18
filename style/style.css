@@ -432,8 +432,9 @@ img.pca-image {
 }
 
 @media all and (max-width: 700px) { /* screen size until 500px */
-    neighbors.dropdown{
-        display: none; /* 화면가로크기가 500px이하인 경우 dropdown invisible */
+    neighbors.dropdown, #neighborsBtn, #neighborsList{
+        display: none;/* 화면가로크기가 500px이하인 경우 dropdown invisible */
+
     }
     .modal-content.pca{
         width: 90%;

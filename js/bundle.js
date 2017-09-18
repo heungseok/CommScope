@@ -9151,7 +9151,12 @@ function pixel(graph, options) {
   function addNeighborsToHTML(){
 
     // open dropdownList
-    $('#neighborsBtn').click();
+    // $('#neighborsBtn').click();
+    $("#neighborsList").css("display", "block");
+    if (window.matchMedia('(max-width: 700px)').matches){
+        $("#neighborsList").css("display", "none");
+    }
+
 
     // get dropdownList's DOM
     var dropdownDom = document.getElementById("neighborsList");
